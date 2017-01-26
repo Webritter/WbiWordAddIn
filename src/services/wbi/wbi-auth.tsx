@@ -9,7 +9,16 @@ export interface IWbiAuthResponse {
   access_token: string;
   token_type: string
   userName: string;
-  expires: Date;
+  '.expires' : Date;
+  '.issued' : Date;
+}
+
+export const nullWbiAuthResponse : IWbiAuthResponse = {
+  access_token : "invalid",
+  token_type: "",
+  userName: "",
+  '.expires' : new Date(),
+  '.issued' : new Date()
 }
 
 // get a user-token from wbi service

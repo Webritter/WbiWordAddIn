@@ -39,13 +39,13 @@ export class WbiAuth extends React.Component<IProps, IState> {
     if (isLoggedInAs) {
       return(
         <div className="o-grid__cell u-window-box--medium">
-          <div>Currently logged in as {isLoggedInAs}</div>
+          <div>Currently logged in as {isLoggedInAs} until {(expires) ? expires.toString(): ""}</div>
           <Button
             description="Logout"
             buttonType={ ButtonType.primary } onClick={onLogoutClick}
             >Logout
           </Button>
-          {expires}
+          
         </div>
         );
     }

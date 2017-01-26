@@ -12,7 +12,7 @@ import {
   default as wbiAuthReducer, IWbiAuthReducer,
 } from './wbi-auth-reducer';
 
-import {IWbiAuthResponse} from '../services/wbi/wbi-auth'
+import {IWbiAuthResponse, nullWbiAuthResponse} from '../services/wbi/wbi-auth'
 
 export interface IRootReducer {
   routing: any;
@@ -30,7 +30,9 @@ export const rootReducer = combineReducers({
 
 const recoverState = function() {
   var localStore = new AppStore();
-  if (localStore.access_token && localStore.expires) {
+
+  if (localStore.access_token && localStore.access_token != nullWbiAuthResponse.access_token) {
+    console.log ("access token found in localStorage!");
 
 
     // check if the acccess token is still valid
@@ -38,7 +40,8 @@ const recoverState = function() {
       access_token : localStore.access_token,
       token_type: localStore.token_type,
       userName: localStore.userName,
-      expires:new Date(localStore.expires)
+      '.expires' : new Date(localStore['.expires']),
+      '.issued' : new Date(localStore['.issued']) 
 
     };
     const storedWbiAuth : IWbiAuthReducer = {
@@ -54,6 +57,7 @@ const recoverState = function() {
       wbiAuth: Immutable.from(storedWbiAuth)
     };
   } else {
+       console.log ("no access token found in localStorage!");
     return {};
   }
 }

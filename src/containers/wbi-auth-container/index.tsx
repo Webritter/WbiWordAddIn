@@ -4,13 +4,12 @@ import { Action } from 'redux-actions';
 import { connect } from 'react-redux';
 // components imports
 import { IRootReducer } from '../../store';
-import { ICurrencyRatesReducer } from '../../store/currency-rates-reducer';
 import { IWbiAuthReducer } from '../../store/wbi-auth-reducer';
 import { PageHeader } from '../../components/page-header';
 import { PageSection } from '../../components/page-section';
 import * as currencyConverterActions from '../../store/wbi-auth-reducer';
 // services
-import { authenticate, IWbiAuthResponse } from '../../services/wbi/wbi-auth';
+import { authenticate, IWbiAuthResponse, nullWbiAuthResponse } from '../../services/wbi/wbi-auth';
 import { AppStore } from '../../services/local-storage/app-store';
 
 // ui components
@@ -18,7 +17,6 @@ import { WbiAuth } from './components/wbi-auth';
 
 // properties
 interface IProps {
-  currencyRates: ICurrencyRatesReducer;
   wbiAuth: IWbiAuthReducer;
   updateUsername : (payload: string) => Action<string>;
   updatePassword : (payload: string) => Action<string>;
@@ -46,16 +44,23 @@ export class WbiAuthContainer extends React.Component<IProps, IState> {
       // authetnticate the current user
       authenticate(username, password)
         .then((data) =>{
+          // store login success in state
           loginSuccess(data);
+          // store access token in local appstore
           appstore.save(data);      
         })
         .catch((error) =>{
+          // indicate login error
           loginError(error.message)
+          // clear token in local store
+          appstore.save(nullWbiAuthResponse);
         });
     }
 
     const onLogoutClick = function() {
       logout(username);
+      // clear token in local store
+      appstore.save(nullWbiAuthResponse);
     }
 
 
@@ -71,7 +76,7 @@ export class WbiAuthContainer extends React.Component<IProps, IState> {
                    isLoading= {isLoading}
                    errorMessage={errorMessage}
                    isLoggedInAs={(token)? token.userName : ''}
-                   expires={(token) ? token.expires : new Date()}
+                   expires={(token) ? token['.expires'] : new Date()}
             />
         </section>
       </article>
@@ -80,7 +85,6 @@ export class WbiAuthContainer extends React.Component<IProps, IState> {
 }
 
 const stateToProps = (storeState: IRootReducer) => ({
-  currencyRates: storeState.currencyRates,
   wbiAuth: storeState.wbiAuth
 });
 

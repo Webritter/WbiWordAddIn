@@ -8,7 +8,8 @@ export class AppStore {
   access_token = '';
   token_type= '';
   userName= '';
-  expires= INITIAL_DATE;
+  '.expires' = INITIAL_DATE;
+  '.issued' = INITIAL_DATE;
 
   constructor() {
     this.load();
@@ -21,7 +22,7 @@ export class AppStore {
       const stateItem = stateObject[key];
       if (stateItem) {
         this[key] = stateItem;
-        sessionStorage.setItem(storageKey, stateItem);
+        localStorage .setItem(storageKey, stateItem);
       }
     });
   }
@@ -29,7 +30,7 @@ export class AppStore {
   load() {
     Object.keys(this).forEach(key => {
       const storageKey = STORAGE_PREFIX + key;
-      const storageItem = sessionStorage.getItem(storageKey);
+      const storageItem = localStorage.getItem(storageKey);
       if (storageItem) {
         this[key] = storageItem;
       }

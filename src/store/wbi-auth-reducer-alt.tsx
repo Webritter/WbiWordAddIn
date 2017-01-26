@@ -1,6 +1,6 @@
 import { handleActions, Action, createAction } from 'redux-actions';
 import * as Immutable from 'seamless-immutable';
-
+import {IWbiAuthResponse} from '../services/wbi/wbi-auth'
 
 const AUTHENTICATE = 'wbiAuth/AUTHENTICATE';
 const AUTHENTICATE_SUCCESS = 'wbiAuth/AUTHENTICATE_SUCCESS';
@@ -61,4 +61,4 @@ export default handleActions<any, any>({
     errorMessage: action.payload,
   }),
 }, initialState);
-*/
+
