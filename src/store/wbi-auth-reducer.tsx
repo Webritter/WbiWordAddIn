@@ -10,8 +10,8 @@ const LOGIN = 'wbiAuth/LOGIN'
 const LOGIN_SUCCESS = 'wbiAuth/LOGIN_SUCCESS'
 const LOGIN_ERROR = 'wbiAuth/LOGIN_ERROR'
 const LOGOUT = 'wbiAuth/LOGOUT'
-// Action Creators
 
+// Action Creators
 export const updateUsername = createAction<string>(UPDATE_USERNAME);
 export const updatePassword = createAction<string>(UPDATE_PASSWORD);
 export const login = createAction<string>(LOGIN);
@@ -22,14 +22,12 @@ export const loginError = createAction<string>(LOGIN_ERROR);
 
 
 // Reducer
-
 export interface IWbiAuthReducer {
   username: string;
   password: string;
   isLoading: boolean;
   errorMessage : string | null;
   token: IWbiAuthResponse | null;
-
 }
 export const initialState: IWbiAuthReducer = {
   username: '',

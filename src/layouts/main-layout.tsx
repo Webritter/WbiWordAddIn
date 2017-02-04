@@ -17,6 +17,7 @@ export class MainLayout extends React.Component<{}, {}> {
           <LayoutTopNav>
             <LayoutTopNavLink href="/" isPrimary> Home </LayoutTopNavLink>
             <LayoutTopNavLink href="/css-modules"> CSS Modules </LayoutTopNavLink> 
+            <LayoutTopNavLink href="/document"> Dokument </LayoutTopNavLink> 
             <LayoutTopNavLink href="/login"> Login </LayoutTopNavLink>
           </LayoutTopNav>
         </LayoutHeader>

@@ -8,8 +8,8 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { MainLayout } from './layouts/main-layout';
 import { HomeContainer } from './containers/home-container/index';
 import { CssModulesContainer } from './containers/css-modules-container/index';
-import WbiAuthContainer from './containers/wbi-auth-container/index';
-
+import { default as WbiAuthContainer } from './containers/wbi-auth-container/index';
+import { default as DocumentContainer } from './containers/document-container/index';
 
 import { store } from './store/index';
 const history = syncHistoryWithStore(hashHistory, store) as any;
@@ -20,6 +20,7 @@ function App() {
       <Router history={history}>
         <Route component={MainLayout}>
           <Route path="/" component={HomeContainer} />
+          <Route path="/document" component={DocumentContainer} />
           <Route path="/login" component={WbiAuthContainer} />
           <Route path="/css-modules" component={CssModulesContainer} />
         </Route>

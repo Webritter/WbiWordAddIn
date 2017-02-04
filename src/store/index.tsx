@@ -4,13 +4,10 @@ import { routerReducer } from 'react-router-redux';
 import * as Immutable from 'seamless-immutable';
 
 import { AppStore } from '../services/local-storage/app-store'
-import {
-  default as currencyRatesReducer, ICurrencyRatesReducer,
-} from './currency-rates-reducer';
-
-import {
-  default as wbiAuthReducer, IWbiAuthReducer,
-} from './wbi-auth-reducer';
+import { default as currencyRatesReducer, ICurrencyRatesReducer } from './currency-rates-reducer';
+import { default as wbiAuthReducer, IWbiAuthReducer, initialState as authInitialState} from './wbi-auth-reducer';
+import { default as documentReducer, IDocumentReducer, initialState as documentInitialState } from './document-reducer';
+import { default as wbiMyInfoReducer, IWbiMyInfoReducer, initialState as myInfoInitialState } from './wbi-myinfo-reducer';
 
 import {IWbiAuthResponse, nullWbiAuthResponse} from '../services/wbi/wbi-auth'
 
@@ -18,23 +15,32 @@ export interface IRootReducer {
   routing: any;
   currencyRates: ICurrencyRatesReducer;
   wbiAuth: IWbiAuthReducer;
+  myInfo: IWbiMyInfoReducer;
+  document: IDocumentReducer;
 }
 
 export const rootReducer = combineReducers({
   routing: routerReducer,
   currencyRates: currencyRatesReducer,
   wbiAuth: wbiAuthReducer,
+  myInfo: wbiMyInfoReducer,
+  document: documentReducer
 });
 
 // rehydrating state on app start: implement here...
-
 const recoverState = function() {
+
+  var initialState = 
+  {
+      wbiAuth:  Immutable.from(authInitialState),
+      myInfo: Immutable.from(myInfoInitialState),
+      document:  Immutable.from(documentInitialState)
+  }
+  
+  
   var localStore = new AppStore();
-
   if (localStore.access_token && localStore.access_token != nullWbiAuthResponse.access_token) {
-    console.log ("access token found in localStorage!");
-
-
+   
     // check if the acccess token is still valid
     const storedAuthResponse : IWbiAuthResponse = { 
       access_token : localStore.access_token,
@@ -44,22 +50,14 @@ const recoverState = function() {
       '.issued' : new Date(localStore['.issued']) 
 
     };
-    const storedWbiAuth : IWbiAuthReducer = {
-      username: '',
-      password: '',
-      isLoading: false,
-      errorMessage: null,
-      token: storedAuthResponse
+    initialState.wbiAuth.merge(storedAuthResponse);
+    console.log ("access token found in localStorage!");
 
-    }
-
-    return {
-      wbiAuth: Immutable.from(storedWbiAuth)
-    };
   } else {
-       console.log ("no access token found in localStorage!");
-    return {};
+    console.log ("no access token found in localStorage!");
   }
+
+  return initialState;
 }
 
 
