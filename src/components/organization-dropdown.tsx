@@ -2,13 +2,14 @@ import * as React from 'react';
 import { Action } from 'redux-actions';
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/DropDown'
 
-import { IWbiOrganization } from '../services/wbi/wbi-myinfo'
+import { IWbiOrganization } from '../services/wbi/wbi-types'
 
 interface IProps {
   label: string;
   onChange: (org: IWbiOrganization) => void;
   organizations : [IWbiOrganization] | null;
   selected : IWbiOrganization | null;
+  disabled: boolean;
 }
 
 
@@ -23,7 +24,7 @@ export class WbiOrganizationDropdown extends React.Component<IProps, IState> {
   
   render(): JSX.Element {
 
-    const { organizations, onChange, selected } = this.props;
+    const { organizations, onChange, selected, disabled } = this.props;
 
     // check if there is a organization list
     if (organizations == null) {
@@ -52,6 +53,7 @@ export class WbiOrganizationDropdown extends React.Component<IProps, IState> {
     return <Dropdown
           label='Organisation'
           options={orgOptions}
+          disabled={disabled}
           onChanged={ selectionChanged }
           /> 
 

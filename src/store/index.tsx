@@ -27,14 +27,15 @@ export const rootReducer = combineReducers({
   document: documentReducer
 });
 
+
 // rehydrating state on app start: implement here...
 const recoverState = function() {
 
   var initialState = 
   {
-      wbiAuth:  Immutable.from(authInitialState),
-      myInfo: Immutable.from(myInfoInitialState),
-      document:  Immutable.from(documentInitialState)
+      wbiAuth:  authInitialState,
+      myInfo: myInfoInitialState,
+      document:  documentInitialState
   }
   
   
@@ -50,14 +51,14 @@ const recoverState = function() {
       '.issued' : new Date(localStore['.issued']) 
 
     };
-    initialState.wbiAuth.merge(storedAuthResponse);
+    initialState.wbiAuth.token = storedAuthResponse;
     console.log ("access token found in localStorage!");
 
   } else {
     console.log ("no access token found in localStorage!");
   }
 
-  return initialState;
+  return Immutable.from(initialState);
 }
 
 
@@ -72,3 +73,4 @@ export const store = createStore(
 export function __reload(exports: any) {
   console.log(exports.store.getState());
 }
+

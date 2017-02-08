@@ -1,6 +1,6 @@
 // lib imports
 import * as React from 'react';
-import { IWbiOrganization } from '../../../services/wbi/wbi-myinfo'
+import { IWbiOrganization } from '../../../services/wbi/wbi-types'
 interface IProps {
   organization : IWbiOrganization;
 }

@@ -34,7 +34,9 @@
   },
   "devDependencies": {
     "@types/classnames": "^0.0.32",
+    "@types/isomorphic-fetch": "0.0.32",
     "@types/jest": "^16.0.1",
+    "@types/office-js": "0.0.37",
     "@types/react": "^0.14.43",
     "@types/react-dom": "^0.14.11",
     "@types/react-redux": "^4.4.32",
@@ -54,7 +56,8 @@
     "systemjs": "^0.19.41",
     "ts-jest": "^17.0.3",
     "tslint": "^4.0.2",
-    "typescript": "^2.1.4"
+    "typescript": "^2.1.4",
+    "typings": "^2.1.0"
   },
   "jspm": {
     "name": "app",
@@ -72,7 +75,9 @@
       "redux-actions": "npm:redux-actions@^0.11.0",
       "redux-localstorage": "npm:redux-localstorage@^0.4.1",
       "seamless-immutable": "npm:seamless-immutable@^6.3.0",
-      "whatwg-fetch": "npm:whatwg-fetch@^1.1.0"
+      "whatwg-fetch": "npm:whatwg-fetch@^1.1.0",
+      "es6-promise": "npm:es6-promise@^4.0.5",
+      "isomorphic-fetch": "npm:isomorphic-fetch@^2.2.1"
     },
     "devDependencies": {
       "css": "github:systemjs/plugin-css@^0.1.32",
@@ -164,6 +169,9 @@
     }
   },
   "dependencies": {
+    "@microsoft/office-js": "0.0.0",
+    "es6-promise": "^4.0.5",
+    "isomorphic-fetch": "^2.2.1",
     "office-ui-fabric-react": "^0.85.0",
     "redux-localstorage": "^0.4.1"
   }

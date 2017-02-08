@@ -29,9 +29,34 @@
   <!-- body bottom scripts -->
   <!-- below section could be auto-generated and overwritten during build for prod -->
   <!-- loading-app:start -->
+  <script>
+  if (typeof Object.assign != 'function') {
+  Object.assign = function(target) {
+    'use strict';
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object');
+    }
+
+    target = Object(target);
+    for (var index = 1; index < arguments.length; index++) {
+      var source = arguments[index];
+      if (source != null) {
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
+      }
+    }
+    return target;
+  };
+}
+  </script>
   <script src="jspm_packages/system.js"></script>
   <script src="jspm.config.js"></script>
   <script src="temp/vendor.dev.js"></script>
+  <script src="https://localhost:1337/vorlon.js"></script>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
   <script>
     // hot-reload config
     SystemJS.import('systemjs-hot-reloader').then(function(HotReloader) {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Action } from 'redux-actions';
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/DropDown'
 
-import { IWbiLayout } from '../services/wbi/wbi-myinfo'
+import { IWbiLayout } from '../services/wbi/wbi-types'
 
 interface IProps {
   label: string;

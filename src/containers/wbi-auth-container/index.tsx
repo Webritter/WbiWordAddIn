@@ -12,13 +12,15 @@ import * as wbiAuthActions from '../../store/wbi-auth-reducer';
 import * as wbiMyInfoActions from '../../store/wbi-myinfo-reducer';
 // services
 import { authenticate, IWbiAuthResponse, nullWbiAuthResponse } from '../../services/wbi/wbi-auth';
-import { getMyInfo, IWbiMyInfoResponse } from '../../services/wbi/wbi-myinfo';
+import { getMyInfo } from '../../services/wbi/wbi-myinfo';
+import { IWbiMyInfoResponse } from '../../services/wbi/wbi-types';
 import { AppStore } from '../../services/local-storage/app-store';
 
 // ui components
 import { WbiAuth } from './components/wbi-auth';
 import { WbiMyInfo } from './components/wbi-myinfo';
-import { WbiOrganizationList } from './components/wbi-organization-list';
+import { WbiLoginInfo } from './components/wbi-logininfo';
+
 // properties
 interface IProps {
   wbiAuth: IWbiAuthReducer;
@@ -41,7 +43,6 @@ export class WbiAuthContainer extends React.Component<IProps, IState> {
 
   render() {
     const { username, password, isLoading, errorMessage, token } = this.props.wbiAuth;
-    const { myInfo } = this.props.myInfo;
     const { updateUsername, updatePassword, login, logout, loginSuccess, loginError, 
             myInfoRequest, myInfoSuccess, myInfoError, myInfoClear } = this.props;
 
@@ -85,25 +86,31 @@ export class WbiAuthContainer extends React.Component<IProps, IState> {
       appstore.save(nullWbiAuthResponse);
     }
 
-    
-    let myInfoComponent = null;
-    if (myInfo) {
-     
-      myInfoComponent = <WbiMyInfo firstName={myInfo.FirstName}
-                                   lastName={myInfo.LastName}
-                                   isLoading={this.props.myInfo.isLoading} 
-                                   errorMessage ={this.props.myInfo.errorMessage}
-                                   organizations={myInfo.Organizations}
-                        />
+    const onInfoRequestClick = function() {
+          myInfoRequest(username);
+          getMyInfo()
+            .then((data:IWbiMyInfoResponse) => {
+                myInfoSuccess(data);
+            })
+            .catch((error) =>{
+              // indicate login error
+              myInfoError(error.message)
 
+            });
     }
+    const myinfoComp =  (token) ? <WbiMyInfo info = {this.props.myInfo} onRequestClick= {onInfoRequestClick}/> : <div></div>;
 
     return (
       <article>
         <PageHeader>WBI Login</PageHeader>
-        <PageSection className="u-centered">{(token == null) ? "(Login with username and password)" : "(logged in as "+ username + ")"}</PageSection>
-        {myInfoComponent}
-         <section className="u-letter-box--xlarge">
+        <PageSection className="u-centered">
+          <WbiLoginInfo info={this.props.wbiAuth} />
+        </PageSection>
+
+        {myinfoComp}
+
+
+        <section className="u-letter-box--xlarge">
           <WbiAuth username={username} onUsernameChange={updateUsername}
                    password = {password} onPasswordChange={updatePassword}
                    onLoginClick= {onLoginClick}

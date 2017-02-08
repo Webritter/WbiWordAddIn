@@ -1,5 +1,6 @@
 
 import { validateStatusCode, logRejection } from '../../utils/index';
+import  'isomorphic-fetch';
 
 // Get the latest foreign exchange reference rates in JSON format.
 
