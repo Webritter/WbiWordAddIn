@@ -9,7 +9,7 @@ import { IWbiMyInfoResponse } from './wbi-types';
 const WBI_MYINFO_URL = 'http://wbidatabackend.azurewebsites.net/api/my/info';
 
 // get a info for the currently logged in user
-export async function getMyInfo():
+export async function requestMyInfo():
   Promise<IWbiMyInfoResponse> {
   try {
     var local_store = new AppStore();

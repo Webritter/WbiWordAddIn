@@ -8,7 +8,6 @@ import {Button, ButtonType} from 'office-ui-fabric-react/lib/Button';
 
 interface IProps {
   info : IWbiMyInfoReducer;
-  onRequestClick: any;
 }
 
 interface IState {
@@ -16,17 +15,11 @@ interface IState {
 
 export class WbiMyInfo extends React.Component<IProps, IState> {
   render(): JSX.Element {
-    const { info,onRequestClick } = this.props;
+    const { info } = this.props;
 
     if (info.myInfo == null){
       return (
         <div>
-        <Button
-          disabled={ info.isLoading  }
-          description="Info"
-          buttonType={ ButtonType.primary } onClick={onRequestClick}
-          >Info
-        </Button>
         </div>
       )
     }

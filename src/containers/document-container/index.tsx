@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 // services
 import { IWbiOrganization, IWbiLayout, IWbiDocument } from '../../services/wbi/wbi-types';
 import { inserText } from '../../services/office/document-info';
-import { findByUrl } from '../../services/wbi/wbi-document';
+import { requestByUrl } from '../../services/wbi/wbi-document';
 
 // store
 import { IRootReducer } from '../../store';
@@ -21,6 +21,7 @@ import { WbiOrganizationDropdown } from '../../components/organization-dropdown'
 import { WbiLayoutDropdown } from '../../components/layout-dropdown';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Button,ButtonType } from 'office-ui-fabric-react/lib/Button';
+import { WbiDocumentInfo } from './components/wbi-documentinfo';
 
 // properties
 interface IProps {
@@ -33,15 +34,17 @@ interface IProps {
   updateDescription :  (payload: string) => Action<string>;
   updateWbiData : (payload: IWbiDocument) => Action<IWbiDocument>;
   updateIsLoading : (payload: boolean) => Action<boolean>;
+  updateError:  (payload: string) => Action<string>;
 }
 interface IState {
 }
 
 export class DocumentContainer extends React.Component<IProps, IState> {
 
+
   render() {
 
-    const { updateOrganization, updateLayout,updateUrl, updateTitle, updateDescription, updateWbiData, updateIsLoading } = this.props;
+    const { updateOrganization, updateLayout,updateUrl, updateTitle, updateDescription, updateWbiData, updateIsLoading, updateError } = this.props;
 
     const { organization, layout, title, url, description, wbiData, isLoading } = this.props.document;
     
@@ -60,8 +63,10 @@ export class DocumentContainer extends React.Component<IProps, IState> {
               } else {
                 // update store with file url
                 updateUrl(fileUrl);
-                 // try to find the document in the WBI-list
-                findByUrl(fileUrl).then(function(info:IWbiDocument) {
+                // try to find the document in the WBI-list
+                console.log("trying to get wbi informations for " + fileUrl )
+                requestByUrl(fileUrl).then(function(info:IWbiDocument) {
+                  updateIsLoading(false);
                   // store the received data from wbi server
                   updateWbiData(info);
                   // update input fields with data from wbi server
@@ -74,7 +79,8 @@ export class DocumentContainer extends React.Component<IProps, IState> {
                  
                 }).catch(function(reason) {
                     // file not found in wbi database!
-                    updateDescription("File not found in wbi database!")
+                    updateIsLoading(false);
+                    updateError(reason);
                 });
               }
               
@@ -94,11 +100,15 @@ export class DocumentContainer extends React.Component<IProps, IState> {
 
     if (myInfo == null) {
       
-      return  <div>
-        <div>bitte zuerst einloggen</div>
-        <div>Url:{url}</div>
-        <Button  description="Info" buttonType={ ButtonType.primary } onClick={onRefreshClick} />
-      </div>
+      return (
+        <article>
+          <PageHeader>WBI Document</PageHeader>
+          <PageSection className="u-centered">{url? '('+ url+ ')' : ""}"</PageSection>
+           <section className="u-letter-box--xlarge">
+            <div> Bitte zuerst anmelden! </div>
+            </section>
+        </article>
+      )
     }
     
 
@@ -109,7 +119,9 @@ export class DocumentContainer extends React.Component<IProps, IState> {
     return (
       <article>
         <PageHeader>WBI Document</PageHeader>
-        <PageSection className="u-centered">(current document)</PageSection>
+        <PageSection className="u-centered">
+           <WbiDocumentInfo info={this.props.document} />
+        </PageSection>
          <section className="u-letter-box--xlarge">
           <p>{url}</p>
           <TextField label="Title" ariaLabel="Title" value={title} onChanged={updateTitle} /> 
@@ -121,7 +133,7 @@ export class DocumentContainer extends React.Component<IProps, IState> {
         </section>
       </article>
     );
-  }O
+  }
 }
 
 const stateToProps = (storeState: IRootReducer) => ({

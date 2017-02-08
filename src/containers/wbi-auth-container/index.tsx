@@ -12,7 +12,7 @@ import * as wbiAuthActions from '../../store/wbi-auth-reducer';
 import * as wbiMyInfoActions from '../../store/wbi-myinfo-reducer';
 // services
 import { authenticate, IWbiAuthResponse, nullWbiAuthResponse } from '../../services/wbi/wbi-auth';
-import { getMyInfo } from '../../services/wbi/wbi-myinfo';
+import { requestMyInfo } from '../../services/wbi/wbi-myinfo';
 import { IWbiMyInfoResponse } from '../../services/wbi/wbi-types';
 import { AppStore } from '../../services/local-storage/app-store';
 
@@ -41,6 +41,26 @@ interface IState {
 
 export class WbiAuthContainer extends React.Component<IProps, IState> {
 
+  getMyInfo() {
+    if (this.props.wbiAuth.token) {
+      // set isLoading....
+      this.props.myInfoRequest(this.props.wbiAuth.token.userName);
+      // try to request infos from wbi server
+      requestMyInfo()
+        .then((data:IWbiMyInfoResponse) => {
+          this.props.myInfoSuccess(data);
+        })
+        .catch((error) =>{
+          // indicate request error
+          this.props.myInfoError(error.message)
+        });
+    }
+  }
+
+  componentDidMount() {
+    this.getMyInfo();
+  }
+
   render() {
     const { username, password, isLoading, errorMessage, token } = this.props.wbiAuth;
     const { updateUsername, updatePassword, login, logout, loginSuccess, loginError, 
@@ -61,15 +81,15 @@ export class WbiAuthContainer extends React.Component<IProps, IState> {
           appstore.save(data);
           // get the current user info
           myInfoRequest(data.userName);
-          getMyInfo()
-            .then((data:IWbiMyInfoResponse) => {
-                myInfoSuccess(data);
-            })
-            .catch((error) =>{
-              // indicate login error
-              myInfoError(error.message)
-
-            });
+          requestMyInfo()
+          .then((data:IWbiMyInfoResponse) => {
+            myInfoSuccess(data);
+          })
+          .catch((error) =>{
+          // indicate request error
+            myInfoError(error.message)
+          });
+          
         })
         .catch((error) =>{
           // indicate login error
@@ -86,19 +106,7 @@ export class WbiAuthContainer extends React.Component<IProps, IState> {
       appstore.save(nullWbiAuthResponse);
     }
 
-    const onInfoRequestClick = function() {
-          myInfoRequest(username);
-          getMyInfo()
-            .then((data:IWbiMyInfoResponse) => {
-                myInfoSuccess(data);
-            })
-            .catch((error) =>{
-              // indicate login error
-              myInfoError(error.message)
-
-            });
-    }
-    const myinfoComp =  (token) ? <WbiMyInfo info = {this.props.myInfo} onRequestClick= {onInfoRequestClick}/> : <div></div>;
+    const myinfoComp =  (token) ? <WbiMyInfo info = {this.props.myInfo} /> : <div></div>;
 
     return (
       <article>

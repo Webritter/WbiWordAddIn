@@ -8,11 +8,13 @@ import { IWbiDocument } from './wbi-types';
 const WBI_DOCUMENT_URL = 'http://wbidatabackend.azurewebsites.net/api/my/documents';
 
 // get a info for the currently logged in user
-export async function findByUrl(url: string):
+export async function requestByUrl(url: string):
   Promise<IWbiDocument> {
   try {
     var local_store = new AppStore();
-    let response = await fetch(WBI_DOCUMENT_URL+'/findByUrl&url=' + encodeURIComponent(url),
+    let requestUrl = WBI_DOCUMENT_URL+'/findByUrl&url=' + encodeURIComponent(url);
+    console.log("REQUST:" + requestUrl);
+    let response = await fetch(requestUrl,
     {
         method: 'get',
         headers: {

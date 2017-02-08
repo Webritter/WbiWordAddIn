@@ -11,7 +11,7 @@ const UPDATE_DESCRIPTION = 'document/UPDATTE_DESCRIPTION';
 const UPDATE_URL = 'document/UPDATTE_URL';
 const UPDATE_WBIDATA = 'document/UPDATTE_WBIDATA';
 const UPDATE_ISLOADING = 'document/UPDATTE_ISLOADING';
-
+const UPDATE_ERROR = 'document/UPDATTE_ERROR';
 // Action Creators
 export const updateOrganization = createAction<IWbiOrganization>(UPDATE_ORGANIZATION);
 export const updateLayout = createAction<IWbiLayout>(UPDATE_LAYOUT);
@@ -20,6 +20,8 @@ export const updateDescription = createAction<string>(UPDATE_DESCRIPTION);
 export const updateUrl = createAction<string>(UPDATE_URL);
 export const updateWbiData = createAction<IWbiDocument>(UPDATE_WBIDATA);
 export const updateIsLoading = createAction<boolean>(UPDATE_ISLOADING);
+export const updateError = createAction<string>(UPDATE_ERROR);
+
 // Reducer
 export interface IDocumentReducer {
   organization: IWbiOrganization | null;
@@ -28,7 +30,7 @@ export interface IDocumentReducer {
   url : string;
   title : string;
   description: string;
-  error: string;
+  errorMessage: string;
   isLoading: boolean;
   wbiData : IWbiDocument | null;
 }
@@ -40,7 +42,7 @@ export const initialState: IDocumentReducer = {
   url: "",
   title: "",
   description: "",
-  error: "",
+  errorMessage: "",
   isLoading: false,
   wbiData : null
 };
@@ -72,9 +74,14 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
       return state.merge({
         isLoading: action.payload,
       }); 
+      case UPDATE_ERROR:
+      return state.merge({
+        errorMessage: action.payload,
+      }); 
       case UPDATE_WBIDATA:
       return state.merge({
         isLoading: false,
+        errorMessage: "",
         wbiData: action.payload,
       }); 
     default: return state;
