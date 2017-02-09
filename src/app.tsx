@@ -10,14 +10,16 @@ import { HomeContainer } from './containers/home-container/index';
 import { CssModulesContainer } from './containers/css-modules-container/index';
 import { default as WbiAuthContainer } from './containers/wbi-auth-container/index';
 import { default as DocumentContainer } from './containers/document-container/index';
-
 import { store } from './store/index';
 const history = syncHistoryWithStore(hashHistory, store) as any;
+
 
 function App() {
   return (
     <Provider store={store}>
+
       <Router history={history}>
+
         <Route component={MainLayout}>
           <Route path="/" component={HomeContainer} />
           <Route path="/document" component={DocumentContainer} />

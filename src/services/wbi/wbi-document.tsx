@@ -5,14 +5,14 @@ import { IWbiDocument } from './wbi-types';
 
 // Get the latest foreign exchange reference rates in JSON format.
 
-const WBI_DOCUMENT_URL = 'http://wbidatabackend.azurewebsites.net/api/my/documents';
+const WBI_DOCUMENT_URL = 'http://wbidatabackend.azurewebsites.net/api/documents';
 
 // get a info for the currently logged in user
 export async function requestByUrl(url: string):
   Promise<IWbiDocument> {
   try {
     var local_store = new AppStore();
-    let requestUrl = WBI_DOCUMENT_URL+'/findByUrl&url=' + encodeURIComponent(url);
+    let requestUrl = WBI_DOCUMENT_URL+'/findByUrl?url=' + encodeURIComponent(url);
     console.log("REQUST:" + requestUrl);
     let response = await fetch(requestUrl,
     {

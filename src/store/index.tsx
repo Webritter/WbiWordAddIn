@@ -8,6 +8,7 @@ import { default as currencyRatesReducer, ICurrencyRatesReducer } from './curren
 import { default as wbiAuthReducer, IWbiAuthReducer, initialState as authInitialState} from './wbi-auth-reducer';
 import { default as documentReducer, IDocumentReducer, initialState as documentInitialState } from './document-reducer';
 import { default as wbiMyInfoReducer, IWbiMyInfoReducer, initialState as myInfoInitialState } from './wbi-myinfo-reducer';
+import { default as officeReducer, IOfficeReducer, initialState as officeInitialState } from './office-reducer';
 
 import {IWbiAuthResponse, nullWbiAuthResponse} from '../services/wbi/wbi-auth'
 
@@ -16,6 +17,7 @@ export interface IRootReducer {
   currencyRates: ICurrencyRatesReducer;
   wbiAuth: IWbiAuthReducer;
   myInfo: IWbiMyInfoReducer;
+  office: IOfficeReducer;
   document: IDocumentReducer;
 }
 
@@ -24,6 +26,7 @@ export const rootReducer = combineReducers({
   currencyRates: currencyRatesReducer,
   wbiAuth: wbiAuthReducer,
   myInfo: wbiMyInfoReducer,
+  office: officeReducer,
   document: documentReducer
 });
 
@@ -35,7 +38,8 @@ const recoverState = function() {
   {
       wbiAuth:  authInitialState,
       myInfo: myInfoInitialState,
-      document:  documentInitialState
+      document:  documentInitialState,
+      office: officeInitialState
   }
   
   

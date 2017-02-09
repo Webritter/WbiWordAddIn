@@ -5,6 +5,8 @@ import {IDocumentReducer} from '../../../store/document-reducer'
 
 interface IProps {
   info : IDocumentReducer;
+  initialized: boolean;
+  reason : string;
 }
 
 interface IState {
@@ -12,8 +14,14 @@ interface IState {
 
 export class WbiDocumentInfo extends React.Component<IProps, IState> {
   render(): JSX.Element {
-    const { info } = this.props;
+    const { info, initialized,reason  } = this.props;
 
+    if (!initialized) {
+      return (
+        <span>initializing ...
+        </span>
+      )      
+    }
     if (info.errorMessage){
       return (
         <span>{info.errorMessage}
@@ -30,7 +38,7 @@ export class WbiDocumentInfo extends React.Component<IProps, IState> {
     if (info.wbiData == null)
     {
       return (
-        <span>
+        <span> {reason}
         </span>
       ) 
     }
