@@ -1,10 +1,10 @@
 
-import { validateStatusCode, logRejection } from '../../utils/index';
 import  'isomorphic-fetch';
+import { validateStatusCode, logRejection } from '../../utils/index';
+import { WBI_AUTH_URL } from './wbi-types';
 
 // Get the latest foreign exchange reference rates in JSON format.
 
-const WBI_AUTH_URL = 'http://wbidatabackend.azurewebsites.net/token';
 
 export interface IWbiAuthResponse {
   access_token: string;
@@ -22,19 +22,20 @@ export const nullWbiAuthResponse : IWbiAuthResponse = {
   '.issued' : new Date()
 }
 
-// get a user-token from wbi service
-export async function authenticate(username: string, password:string):
-  Promise<IWbiAuthResponse> {
+export async function authenticate(username: string, password: string): Promise<IWbiAuthResponse> {
   try {
-    let response = await fetch(WBI_AUTH_URL,
+    let requestUrl = WBI_AUTH_URL;
+    let body = "username=" + username + "&password=" + password + "&grant_type=password"
+    console.log("REQUST:" + requestUrl);
+    let response = await fetch(requestUrl,
     {
-        method: 'post',
+        method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"            
         },
-        body:
-        "username=" + username + "&password=" + password + "&grant_type=password"
+        body: body
+       
     });
     validateStatusCode(response);
     return response.json();
@@ -43,3 +44,5 @@ export async function authenticate(username: string, password:string):
     throw(err);
   }
 }
+
+

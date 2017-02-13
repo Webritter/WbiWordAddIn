@@ -36,15 +36,16 @@ export class OfficeContainer extends React.Component<IProps, IState> {
 
   render() {
     const { officeInitialized,  } = this.props;
-    const {initialized} = this.props.office;
+    const {initialized, url} = this.props.office;
 
     const onClick = function() {
+      console.log('Debug clicked!');
       officeInitialized("Debug");
     }
 
     if (!initialized) {
     return (<div>
-              <Button buttonType = {ButtonType.command}  onClick={onClick} >Debug</Button>
+              <Button buttonType = {ButtonType.primary}  onClick={onClick} >Debug</Button>
             </div>);
 
 
@@ -62,4 +63,4 @@ const stateToProps = (storeState: IRootReducer) => ({
 
 const actionsToProps = Object.assign({}, officeActions);
 
-export default connect(stateToProps, actionsToProps)(OfficeContainer);
+export default connect(stateToProps, actionsToProps)(OfficeContainer)

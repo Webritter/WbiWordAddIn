@@ -1,11 +1,13 @@
 import { createAction, Action } from 'redux-actions';
 import * as Immutable from 'seamless-immutable';
 
-import { IWbiOrganization, IWbiLayout, IWbiDocument } from '../services/wbi/wbi-types'
+import { IWbiOrganization, IWbiLayout, IWbiDocument,IWbiOwner } from '../services/wbi/wbi-types'
+import { IDropdownOption } from 'office-ui-fabric-react/lib/DropDown'
 
 // Action Types - LOAD, CREATE, UPDATE, REMOVE
 const UPDATE_ORGANIZATION = 'document/UPDATE_ORGANIZATION';
 const UPDATE_LAYOUT = 'document/UPDATE_LAYOUT';
+const UPDATE_OWNER = 'document/UPDATE_OWNER';
 const UPDATE_TITLE = 'document/UPDATTE_TITE';
 const UPDATE_DESCRIPTION = 'document/UPDATTE_DESCRIPTION';
 const UPDATE_URL = 'document/UPDATTE_URL';
@@ -13,9 +15,11 @@ const UPDATE_WBIDATA = 'document/UPDATTE_WBIDATA';
 const UPDATE_ISLOADING = 'document/UPDATTE_ISLOADING';
 const UPDATE_ERROR = 'document/UPDATTE_ERROR';
 const UPDATE_OFFICE = 'document/UPDATTE_OFFICE';
+
 // Action Creators
 export const updateOrganization = createAction<IWbiOrganization>(UPDATE_ORGANIZATION);
 export const updateLayout = createAction<IWbiLayout>(UPDATE_LAYOUT);
+export const updateOwner = createAction<IWbiLayout>(UPDATE_OWNER);
 export const updateTitle = createAction<string>(UPDATE_TITLE);
 export const updateDescription = createAction<string>(UPDATE_DESCRIPTION);
 export const updateUrl = createAction<string>(UPDATE_URL);
@@ -27,6 +31,7 @@ export const updateOffice = createAction<boolean>(UPDATE_OFFICE);
 export interface IDocumentReducer {
   organization: IWbiOrganization | null;
   layout: IWbiLayout | null;
+  owner: IWbiOwner | null;
   number : string;
   url : string;
   title : string;
@@ -35,11 +40,13 @@ export interface IDocumentReducer {
   isLoading: boolean;
   wbiData : IWbiDocument | null;
   officeInitialized: boolean;
+  layoutOptions : [IDropdownOption] | null
 }
 
 export const initialState: IDocumentReducer = {
   organization: null,
   layout: null,
+  owner: null,
   number: "",
   url: "",
   title: "",
@@ -47,7 +54,8 @@ export const initialState: IDocumentReducer = {
   errorMessage: "",
   isLoading: false,
   wbiData : null,
-  officeInitialized : false
+  officeInitialized : false,
+  layoutOptions : null
 };
 
 export default function reducer(state = Immutable.from(initialState), action: Action<any>) {
@@ -58,8 +66,8 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         organization: action.payload,
       });
      case UPDATE_LAYOUT:
-      return state.merge({
-        layout: action.payload,
+     return state.merge({
+        layout: action.payload
       }); 
      case UPDATE_TITLE:
       return state.merge({
@@ -84,12 +92,20 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
       case UPDATE_ERROR:
       return state.merge({
         errorMessage: action.payload,
+        wbiData: null
       }); 
       case UPDATE_WBIDATA:
+      // update the model with the data from wbi server     
       return state.merge({
         isLoading: false,
         errorMessage: "",
         wbiData: action.payload,
+        // update the input fields and dropdowns
+        description: action.payload.Description,
+        title : action.payload.Title,
+        layout: action.payload.Layout,
+        organization : action.payload.Organization,
+        owner: action.payload.Owner
       }); 
     default: return state;
   }

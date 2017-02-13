@@ -13,6 +13,8 @@ interface IState {
 }
 
 export class WbiDocumentInfo extends React.Component<IProps, IState> {
+
+  
   render(): JSX.Element {
     const { info, initialized,reason  } = this.props;
 

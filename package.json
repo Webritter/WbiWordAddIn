@@ -67,6 +67,7 @@
       "csjs": "npm:csjs@^1.0.6",
       "immutable": "npm:immutable@^3.8.1",
       "insert-css": "npm:insert-css@^1.1.0",
+      "jquery": "npm:jquery@^3.1.1",
       "office-ui-fabric-react": "npm:office-ui-fabric-react@^0.85.0",
       "react-dom": "npm:react-dom@^15.3.2",
       "react-redux": "npm:react-redux@^4.4.6",
@@ -141,6 +142,9 @@
         "ignore": [
           "test.js"
         ]
+      },
+      "npm:jquery@3.1.1": {
+        "format": "amd"
       },
       "npm:lodash@4.17.1": {
         "map": {

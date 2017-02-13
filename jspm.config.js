@@ -101,6 +101,7 @@ SystemJS.config({
     "immutable": "npm:immutable@3.8.1",
     "insert-css": "npm:insert-css@1.1.0",
     "isomorphic-fetch": "npm:isomorphic-fetch@2.2.1",
+    "jquery": "npm:jquery@3.1.1",
     "module": "npm:jspm-nodelibs-module@0.2.0",
     "net": "npm:jspm-nodelibs-net@0.2.0",
     "office-ui-fabric-react": "npm:office-ui-fabric-react@0.85.0",

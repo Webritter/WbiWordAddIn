@@ -9,6 +9,7 @@ interface IProps {
   onChange: (layout: IWbiLayout) => void;
   layouts : [IWbiLayout] | null;
   selected : IWbiLayout | null;
+  options : [IDropdownOption] | null
 }
 
 
@@ -38,7 +39,8 @@ export class WbiLayoutDropdown extends React.Component<IProps, IState> {
           isSelected = selected.Id == layout.Id;
       }
      
-      layoutOptions.push({key:layout.Id, text:layout.Name, isSelected:isSelected})});
+      layoutOptions.push({key:layout.Id, text:layout.Name, isSelected:isSelected})
+    });
 
     const selectionChanged = function(selectedItem: IDropdownOption) {
       let layout = layouts.find(layout => layout.Id == selectedItem.key)
@@ -50,7 +52,7 @@ export class WbiLayoutDropdown extends React.Component<IProps, IState> {
 
 
     return <Dropdown
-          label='Layout'
+          label='Layout' selectedKey={(selected)? selected.Id: 0}
           options={layoutOptions}
           onChanged={ selectionChanged }
           /> 

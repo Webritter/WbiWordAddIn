@@ -48,19 +48,13 @@ export class WbiOrganizationDropdown extends React.Component<IProps, IState> {
       }
     }
 
-
-
     return <Dropdown
           label='Organisation'
           options={orgOptions}
           disabled={disabled}
           onChanged={ selectionChanged }
+          selectedKey = {selected? selected.Id : 0}
           /> 
-
-   
-
-
-
 
   }
 }

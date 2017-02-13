@@ -4,9 +4,9 @@ import { Action } from 'redux-actions';
 import { connect } from 'react-redux';
 
 // services
-import { IWbiOrganization, IWbiLayout, IWbiDocument } from '../../services/wbi/wbi-types';
+import { IWbiOrganization, IWbiLayout, IWbiDocument, IWbiPathDocument } from '../../services/wbi/wbi-types';
 import { inserText } from '../../services/office/document-info';
-import { requestByUrl } from '../../services/wbi/wbi-document';
+import { requestByUrl, patchDocument } from '../../services/wbi/wbi-document';
 
 // store
 import { IRootReducer } from '../../store';
@@ -44,39 +44,46 @@ interface IState {
 
 export class DocumentContainer extends React.Component<IProps, IState> {
 
-
+ 
   render() {
-    const {initialized, reason} = this.props.office;
+    const {initialized, reason, url} = this.props.office;
 
     const { updateOrganization, updateLayout,updateUrl, updateTitle, updateDescription, updateWbiData, updateIsLoading, updateError } = this.props;
 
-    const { organization, layout, title, url, description, wbiData, isLoading } = this.props.document;
+    const { organization, layout, owner, title, description, wbiData, isLoading, layoutOptions } = this.props.document;
     
     const onSaveClick = function() {
+      if (wbiData) {
+        var doc:IWbiPathDocument = {
+          Title: title,
+          Url: url,
+          Description: description,
+        }
+        if (owner) doc.OwnerId = owner.Id;
+        if (layout) doc.LayoutId = layout.Id;
+        if (organization) doc.OrganizationId = organization.Id;
 
+        patchDocument(wbiData.Id, doc).then(function(info:IWbiDocument) {
+          // store the received data from wbi server
+          updateWbiData(info);          
+        })
+        .catch(function(message:string) {
+          updateError("" + message);
+        });
+      }
     }
 
     const requestWbiInfos = function(url:string) {
-              console.log("trying to get wbi informations for " + url )
-              requestByUrl(url)
-              .then(function(info:IWbiDocument) {
-                console.log("found wbi informations for " + url )
-                updateIsLoading(false);
-                // store the received data from wbi server
-                updateWbiData(info);
-                // update input fields with data from wbi server
-                updateTitle(info.Title);
-                if (info.Organization)
-                  updateOrganization(info.Organization);
-                if (info.Layout)
-                  updateLayout(info.Layout);
-                })
-              .catch(function(message:string) {
-                // file not found in wbi database!
-                console.log("not found wbi informations for " + url )
-                updateIsLoading(false);
-                updateError("" +message);
-              });
+      requestByUrl(url)
+      .then(function(info:IWbiDocument) {
+        // store the received data from wbi server
+        updateWbiData(info);
+        })
+      .catch(function(message:string) {
+        // file not found in wbi database!
+        console.log("not found wbi informations for " + url )
+        updateError("" +message);
+      });
     }
 
     const onRefreshClick = function() {
@@ -107,29 +114,32 @@ export class DocumentContainer extends React.Component<IProps, IState> {
 
     };
 
-    
-    
-    const { myInfo} = this.props.myInfo;
+     const { myInfo} = this.props.myInfo;
+     
+    // check if the usser is logged in and he has valid myInfos
 
-
-
-
-
+   
     if (myInfo == null) {
-      
       return (
         <article>
           <PageHeader>WBI Document</PageHeader>
-          <PageSection className="u-centered">{url? '('+ url+ ')' : ""}"</PageSection>
-           <section className="u-letter-box--xlarge">
-            <div> Bitte zuerst anmelden! </div>
-            </section>
+          <OfficeAddIn />
+          <PageSection className="u-centered"> Bitte zuerst anmelden!</PageSection>
         </article>
       )
     }
-    
+   
 
-
+    if (!initialized)
+    {
+      return(
+       <article>
+          <PageHeader>WBI Document</PageHeader>
+          <OfficeAddIn />
+          <PageSection className="u-centered"> Bitte zuerst speichern! </PageSection>
+        </article>
+      )
+    }
 
   
 
@@ -145,9 +155,9 @@ export class DocumentContainer extends React.Component<IProps, IState> {
           <TextField label="Title" ariaLabel="Title" value={title} onChanged={updateTitle} /> 
           <TextField label="Description" ariaLabel="Description" multiline={true} value={description} onChanged={updateDescription} /> 
           <WbiOrganizationDropdown disabled ={isLoading || wbiData != null} label="Organisation" selected={organization} organizations={myInfo.Organizations} onChange={updateOrganization}/>
-          <WbiLayoutDropdown label="Layout" selected={layout} layouts={(organization)?organization.Layouts: null} onChange={updateLayout}/>
+          <WbiLayoutDropdown label="Layout" selected={layout} options={layoutOptions} layouts={(organization)?organization.Layouts: null} onChange={updateLayout}/>
           <Button  description="Aktualisieren" buttonType={ ButtonType.primary } onClick={onRefreshClick}>Aktualisieren</Button>
-          <Button  description="Speichern"  buttonType={ ButtonType.primary } onClick={onSaveClick}>Speichern</Button>
+          <Button  description="Speichern" disabled={wbiData == null}  buttonType={ ButtonType.primary } onClick={onSaveClick}>Speichern</Button>
         </section>
       </article>
     );
