@@ -42,6 +42,7 @@ export async function patchDocument(id:string, doc: IWbiPathDocument): Promise<I
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + local_store.access_token,
+            'Host': window.location.hostname
         },
         body : JSON.stringify(doc)
 
