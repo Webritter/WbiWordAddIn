@@ -17,6 +17,7 @@ import {TextField } from 'office-ui-fabric-react/lib/TextField';
 interface IProps {
   office: IOfficeReducer;
   officeInitialized : (payload: string) => Action<string>;
+  updateUrl : (payload: string) => Action<string>;
 }
 
 interface IState {
@@ -24,31 +25,83 @@ interface IState {
 
 export class OfficeContainer extends React.Component<IProps, IState> {
 
+  
   componentDidMount() {
-    const { officeInitialized } = this.props;
+    const { officeInitialized, updateUrl } = this.props;
+    const {initialized, url, reason } = this.props.office;
 
-    Office.initialize = function(reason:any) {
-      officeInitialized(reason);
+    if (!initialized) {
+      // office is not inizialized until now.
+      Office.initialize = function(reason:any) {
+        officeInitialized(reason);
+      }
+    } else {
+      // office is initialized -> try to find the current file url
+      Office.context.document.getFilePropertiesAsync(function (asyncResult: Office.AsyncResult) {
+          console.log("got file properties from word" );
+          // check the file url of the current document
+          var fileUrl = asyncResult.value.url;
+          updateUrl(fileUrl);
+        })
     }
   }
 
 
 
   render() {
-    const { officeInitialized,  } = this.props;
-    const {initialized, url} = this.props.office;
+    const { officeInitialized, updateUrl  } = this.props;
+    const {initialized, url, reason } = this.props.office;
 
-    const onClick = function() {
+    const onDebugClick = function() {
       console.log('Debug clicked!');
       officeInitialized("Debug");
     }
 
+
+   const onRetryClick = function() {
+      console.log('Retry clicked!');
+     
+      const { updateUrl } = this.props;
+ 
+      // office is initialized -> try to find the current file url
+      Office.context.document.getFilePropertiesAsync(function (asyncResult: Office.AsyncResult) {
+          console.log("got file properties from word" );
+          // check the file url of the current document
+          var fileUrl = asyncResult.value.url;
+          updateUrl(fileUrl);
+        })
+    
+    }
+
     if (!initialized) {
-    return (<div>
-              <Button buttonType = {ButtonType.primary}  onClick={onClick} >Debug</Button>
-            </div>);
+      return (
+        <div>
+          <Button buttonType = {ButtonType.primary}  onClick={onDebugClick} >Debug</Button>
+        </div>
+        );
 
 
+    }
+
+    if (reason == 'Debug') {
+      return (
+        <div>
+            <TextField disabled={reason != "Debug"} label="Url" ariaLabel="Url" value={url} onChanged={updateUrl} /> 
+        </div>
+      )
+    }
+
+    if (!url) {
+      // app is running inside office, but no url until now
+      return (
+        <div>
+          <div>
+            Please save your changes to your knowledge base and try again.
+          </div>
+          
+          <Button buttonType = {ButtonType.primary}  onClick={onRetryClick} >Refresh</Button>
+        </div>
+        );
     }
     return (<div></div>);
   }
