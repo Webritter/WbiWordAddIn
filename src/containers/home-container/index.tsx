@@ -6,19 +6,11 @@ import { PageHero } from '../../components/page-hero';
 export function HomeContainer() {
   return (
     <article>
-      <PageHero title="Welcome to" subtitle="React / Redux / TypeScript - starter-kit" />
+      <PageHero title="Wilkommen zu WBI" subtitle="Wissen besser integrieren" />
       <PageSection className="o-container o-container--small">
         <p>
           Below you can find a few examples created using concepts of this starter-kit:
         </p>
-        <ul>
-          <li>
-            <Link to="/currency-converter">Currency Converter App</Link> - (work in progress)
-          </li>
-          <li>
-            <Link to="/css-modules">CSS Modules</Link> - <a href="https://youtu.be/67pPYqom2a0">Overview Video on Youtube</a>
-          </li>
-        </ul>
         <br />
         <div className="c-alert c-alert--info">
           Note: Open Redux DevTools Inspector

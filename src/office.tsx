@@ -12,7 +12,6 @@ import * as officeActions from './store/office-reducer';
 import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import {TextField } from 'office-ui-fabric-react/lib/TextField';
 
-
 // properties
 interface IProps {
   office: IOfficeReducer;
@@ -36,7 +35,7 @@ export class OfficeContainer extends React.Component<IProps, IState> {
           // check the file url of the current document
           var fileUrl = asyncResult.value.url;
           updateUrl(fileUrl);
-        })
+      })
     
     }
   
@@ -53,11 +52,11 @@ export class OfficeContainer extends React.Component<IProps, IState> {
       if (Office && Office.context && Office.context.document) {
         // office is initialized -> try to find the current file url
         Office.context.document.getFilePropertiesAsync(function (asyncResult: Office.AsyncResult) {
-            console.log("got file properties from word" );
-            // check the file url of the current document
-            var fileUrl = asyncResult.value.url;
-            updateUrl(fileUrl);
-          })
+          console.log("got file properties from word" );
+          // check the file url of the current document
+          var fileUrl = asyncResult.value.url;
+          updateUrl(fileUrl);
+        })
       } else {
         // outside of office ????
         
@@ -76,17 +75,12 @@ export class OfficeContainer extends React.Component<IProps, IState> {
       officeInitialized("Debug");
     }
 
-
-
-
     if (!initialized) {
       return (
         <div>
           <Button buttonType = {ButtonType.primary}  onClick={onDebugClick} >Debug</Button>
         </div>
         );
-
-
     }
 
     if (reason == 'Debug') {

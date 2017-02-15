@@ -168,7 +168,9 @@ export class DocumentContainer extends React.Component<IProps, IState> {
       )
     }
 
-  
+    if (url && !wbiData) {
+          requestWbiInfos(url);
+    }
 
     return (
       <article>
