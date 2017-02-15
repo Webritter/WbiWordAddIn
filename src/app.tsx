@@ -13,10 +13,6 @@ import { default as DocumentContainer } from './containers/document-container/in
 import { store } from './store/index';
 const history = syncHistoryWithStore(hashHistory, store) as any;
 
-import { Promise } from 'es6-promise';
-
-
-
 function App() {
   return (
     <Provider store={store}>

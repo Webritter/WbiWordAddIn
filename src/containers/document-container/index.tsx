@@ -4,9 +4,9 @@ import { Action } from 'redux-actions';
 import { connect } from 'react-redux';
 
 // services
-import { IWbiOrganization, IWbiLayout, IWbiDocument, IWbiPathDocument } from '../../services/wbi/wbi-types';
+import { IWbiOrganization, IWbiLayout, IWbiDocument, IWbiPathDocument, IWbiAddDocument } from '../../services/wbi/wbi-types';
 import { inserText } from '../../services/office/document-info';
-import { requestByUrl, patchDocument } from '../../services/wbi/wbi-document';
+import { requestByUrl, patchDocument, addDocument } from '../../services/wbi/wbi-document';
 
 // store
 import { IRootReducer } from '../../store';
@@ -44,26 +44,43 @@ interface IState {
 
 export class DocumentContainer extends React.Component<IProps, IState> {
 
- 
-  render() {
-    const {initialized, reason, url} = this.props.office;
+ public onSaveClick = () => { 
+    // <-- note syntax here
+     const {url} = this.props.office;
+     const { updateWbiData, updateIsLoading, updateError } = this.props;
 
-    const { updateOrganization, updateLayout,updateUrl, updateTitle, updateDescription, updateWbiData, updateIsLoading, updateError } = this.props;
-
-    const { organization, layout, owner, title, description, wbiData, isLoading, layoutOptions } = this.props.document;
+    const { organization, layout, owner, title, description, wbiData, } = this.props.document;
     
-    const onSaveClick = function() {
       if (wbiData) {
-        var doc:IWbiPathDocument = {
+        // update the document on the wbi server
+        var pathDoc:IWbiPathDocument = {
           Title: title,
           Url: url,
           Description: description,
         }
-        if (owner) doc.OwnerId = owner.Id;
-        if (layout) doc.LayoutId = layout.Id;
-        if (organization) doc.OrganizationId = organization.Id;
-
-        patchDocument(wbiData.Id, doc).then(function(info:IWbiDocument) {
+        if (owner) pathDoc.OwnerId = owner.Id;
+        if (layout) pathDoc.LayoutId = layout.Id;
+        if (organization) pathDoc.OrganizationId = organization.Id;
+        updateIsLoading(true);
+        patchDocument(wbiData.Id, pathDoc).then(function(info:IWbiDocument) {
+          // store the received data from wbi server
+          updateWbiData(info);          
+        })
+        .catch(function(message:string) {
+          updateError("" + message);
+        });
+      } else {
+        // add a document to the wbi server
+        var addDoc:IWbiAddDocument = {
+          Title: title,
+          Url: url,
+          Description: description,
+          OwnerId: (owner) ? owner.Id : 0,
+          LayoutId : (layout) ? layout.Id : 0,
+          OrganizationId : (organization) ? organization.Id : 0
+        }
+        updateIsLoading(true);
+        addDocument(addDoc).then(function(info:IWbiDocument) {
           // store the received data from wbi server
           updateWbiData(info);          
         })
@@ -72,6 +89,16 @@ export class DocumentContainer extends React.Component<IProps, IState> {
         });
       }
     }
+
+
+  render() {
+    const {initialized, reason, url} = this.props.office;
+
+    const { updateOrganization, updateLayout,updateUrl, updateTitle, updateDescription, updateWbiData, updateIsLoading, updateError } = this.props;
+
+    const { organization, layout, owner, title, description, wbiData, isLoading, layoutOptions } = this.props.document;
+    
+  
 
     const requestWbiInfos = function(url:string) {
       requestByUrl(url)
@@ -151,14 +178,13 @@ export class DocumentContainer extends React.Component<IProps, IState> {
            <OfficeAddIn />
         </PageSection>
          <section className="u-letter-box--xlarge">
-          <TextField disabled={reason != "Debug"} label="Url" ariaLabel="Url" value={url} onChanged={updateUrl} /> 
           <TextField label="Title" ariaLabel="Title" value={title} onChanged={updateTitle} /> 
           <TextField label="Description" ariaLabel="Description" multiline={true} value={description} onChanged={updateDescription} /> 
           <WbiOrganizationDropdown disabled ={isLoading || wbiData != null} label="Organisation" selected={organization} organizations={myInfo.Organizations} onChange={updateOrganization}/>
           <WbiLayoutDropdown label="Layout" selected={layout} options={layoutOptions} layouts={(organization)?organization.Layouts: null} onChange={updateLayout}/>
           <Button  description="Aktualisieren" buttonType={ ButtonType.primary } onClick={onRefreshClick}>Aktualisieren</Button>
-          <Button  description="Speichern" disabled={wbiData == null}  buttonType={ ButtonType.primary } onClick={onSaveClick}>Speichern</Button>
-        </section>
+          <Button  description="Speichern" disabled={!url || !title || !description || !layout || !organization} buttonType={ ButtonType.primary } onClick={this.onSaveClick}>{wbiData ? 'Speichern': 'Hinzufügen'}</Button>
+         </section>
       </article>
     );
   }

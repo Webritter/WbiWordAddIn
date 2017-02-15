@@ -1,7 +1,7 @@
 
 import { validateStatusCode, logRejection } from '../../utils/index';
 import { AppStore } from '../local-storage/app-store';
-import { IWbiDocument, WBI_DOCUMENTS_URL, IWbiPathDocument  } from './wbi-types';
+import { IWbiDocument, WBI_DOCUMENTS_URL, IWbiPathDocument, IWbiAddDocument } from './wbi-types';
 
 // Get the latest foreign exchange reference rates in JSON format.
 
@@ -21,6 +21,31 @@ export async function requestByUrl(url: string): Promise<IWbiDocument> {
             'Authorization': 'Bearer ' + local_store.access_token,
             'Host': window.location.hostname
         }
+    });
+    validateStatusCode(response);
+    return response.json();
+  } catch (err) {
+    logRejection(err);
+    throw(err);
+  }
+}
+
+export async function addDocument(doc: IWbiAddDocument): Promise<IWbiDocument> {
+  try {
+    var local_store = new AppStore();
+    let requestUrl = WBI_DOCUMENTS_URL;
+    console.log("REQUST:" + requestUrl);
+    let response = await fetch(requestUrl,
+    {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + local_store.access_token,
+            'Host': window.location.hostname
+        },
+        body : JSON.stringify(doc)
+
     });
     validateStatusCode(response);
     return response.json();

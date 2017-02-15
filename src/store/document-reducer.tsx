@@ -91,6 +91,7 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
       }); 
       case UPDATE_ERROR:
       return state.merge({
+        isLoading: false,
         errorMessage: action.payload,
         wbiData: null
       }); 

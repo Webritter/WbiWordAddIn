@@ -25,6 +25,20 @@ interface IState {
 
 export class OfficeContainer extends React.Component<IProps, IState> {
 
+   onRetryClick = () =>  {
+      console.log('Retry clicked!');
+     
+      const { updateUrl } = this.props;
+ 
+      // office is initialized -> try to find the current file url
+      Office.context.document.getFilePropertiesAsync(function (asyncResult: Office.AsyncResult) {
+          console.log("got file properties from word" );
+          // check the file url of the current document
+          var fileUrl = asyncResult.value.url;
+          updateUrl(fileUrl);
+        })
+    
+    }
   
   componentDidMount() {
     const { officeInitialized, updateUrl } = this.props;
@@ -36,13 +50,18 @@ export class OfficeContainer extends React.Component<IProps, IState> {
         officeInitialized(reason);
       }
     } else {
-      // office is initialized -> try to find the current file url
-      Office.context.document.getFilePropertiesAsync(function (asyncResult: Office.AsyncResult) {
-          console.log("got file properties from word" );
-          // check the file url of the current document
-          var fileUrl = asyncResult.value.url;
-          updateUrl(fileUrl);
-        })
+      if (Office && Office.context && Office.context.document) {
+        // office is initialized -> try to find the current file url
+        Office.context.document.getFilePropertiesAsync(function (asyncResult: Office.AsyncResult) {
+            console.log("got file properties from word" );
+            // check the file url of the current document
+            var fileUrl = asyncResult.value.url;
+            updateUrl(fileUrl);
+          })
+      } else {
+        // outside of office ????
+        
+      }
     }
   }
 
@@ -58,20 +77,7 @@ export class OfficeContainer extends React.Component<IProps, IState> {
     }
 
 
-   const onRetryClick = function() {
-      console.log('Retry clicked!');
-     
-      const { updateUrl } = this.props;
- 
-      // office is initialized -> try to find the current file url
-      Office.context.document.getFilePropertiesAsync(function (asyncResult: Office.AsyncResult) {
-          console.log("got file properties from word" );
-          // check the file url of the current document
-          var fileUrl = asyncResult.value.url;
-          updateUrl(fileUrl);
-        })
-    
-    }
+
 
     if (!initialized) {
       return (
@@ -99,7 +105,7 @@ export class OfficeContainer extends React.Component<IProps, IState> {
             Please save your changes to your knowledge base and try again.
           </div>
           
-          <Button buttonType = {ButtonType.primary}  onClick={onRetryClick} >Refresh</Button>
+          <Button buttonType = {ButtonType.primary}  onClick={this.onRetryClick} >Refresh</Button>
         </div>
         );
     }

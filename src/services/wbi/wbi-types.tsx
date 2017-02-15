@@ -62,3 +62,12 @@ export interface IWbiDocument {
   
  }
 
+ export interface IWbiAddDocument
+ {
+  Title: string;
+  Description: string;
+  Url: string;
+  OwnerId: number;
+  OrganizationId: number;
+  LayoutId: number
+  }
