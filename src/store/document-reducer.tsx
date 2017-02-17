@@ -12,6 +12,7 @@ const UPDATE_LAYOUT = 'document/UPDATE_LAYOUT';
 const UPDATE_OWNER = 'document/UPDATE_OWNER';
 const UPDATE_TITLE = 'document/UPDATTE_TITE';
 const UPDATE_DESCRIPTION = 'document/UPDATTE_DESCRIPTION';
+const UPDATE_VERSION = 'document/UPDATTE_VERSION';
 const UPDATE_URL = 'document/UPDATTE_URL';
 const UPDATE_WBIDATA = 'document/UPDATTE_WBIDATA';
 const UPDATE_ISLOADING = 'document/UPDATTE_ISLOADING';
@@ -24,6 +25,7 @@ export const updateLayout = createAction<IWbiLayout>(UPDATE_LAYOUT);
 export const updateOwner = createAction<IWbiLayout>(UPDATE_OWNER);
 export const updateTitle = createAction<string>(UPDATE_TITLE);
 export const updateDescription = createAction<string>(UPDATE_DESCRIPTION);
+export const updateVersion = createAction<string>(UPDATE_VERSION);
 export const updateUrl = createAction<string>(UPDATE_URL);
 export const updateWbiData = createAction<IWbiDocument>(UPDATE_WBIDATA);
 export const updateIsLoading = createAction<boolean>(UPDATE_ISLOADING);
@@ -38,6 +40,7 @@ export interface IDocumentReducer {
   url : string;
   title : string;
   description: string;
+  version: string;
   errorMessage: string;
   isLoading: boolean;
   wbiData : IWbiDocument | null;
@@ -53,6 +56,7 @@ export const initialState: IDocumentReducer = {
   url: "",
   title: "",
   description: "",
+  version: "",
   errorMessage: "",
   isLoading: false,
   wbiData : null,
@@ -69,18 +73,23 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         organization: action.payload,
       });
      case UPDATE_LAYOUT:
-      insertHeader(action.payload.Header, (state.wbiData) ? state.wbiData.Id : "", state.title, "","")
+      insertHeader(action.payload.Header, (state.wbiData) ? state.wbiData.Id : "", state.title, "",state.version)
       return state.merge({
         layout: action.payload
       }); 
      case UPDATE_TITLE:
-      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", action.payload, "","")
+      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", action.payload, "",state.version)
       return state.merge({
         title: action.payload,
       }); 
       case UPDATE_DESCRIPTION:
       return state.merge({
         description: action.payload,
+      }); 
+      case UPDATE_VERSION:
+       insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", state.title, "", action.payload)
+      return state.merge({
+        version: action.payload,
       }); 
       case UPDATE_URL:
       return state.merge({
@@ -102,13 +111,20 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
       }); 
       case UPDATE_WBIDATA:
       // update the model with the data from wbi server    
- 
+       const header:string = (action.payload.Layout) ? action.payload.Layout.Header : "";
+       const nr:string = action.payload.Id;
+       const title:string = action.payload.Title;
+       const owner:string = "";
+       const version:string = action.payload.Version;
+       insertHeader(header, nr, title, owner,version)
+      
       return state.merge({
         isLoading: false,
         errorMessage: "",
         wbiData: action.payload,
         // update the input fields and dropdowns
         description: action.payload.Description,
+        version: action.payload.Version,
         title : action.payload.Title,
         layout: action.payload.Layout,
         organization : action.payload.Organization,

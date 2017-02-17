@@ -12,11 +12,6 @@ interface IProps {
   disabled: boolean;
 }
 
-
-interface IProps {
-  organizations : [IWbiOrganization] | null;
-}
-
 interface IState {
 }
 

@@ -45,6 +45,7 @@ export interface IWbiDocument {
   Id: string;
   Title: string;
   Description: string;
+  Version: string;
   Url: string;
   Owner: IWbiOwner | null;
   Organization: IWbiOrganization | null;
@@ -55,6 +56,7 @@ export interface IWbiDocument {
  export interface IWbiPathDocument {
   Title: string;
   Description: string;
+  Version: string;
   Url: string;
   OwnerId?: number;
   OrganizationId? :number;
@@ -66,6 +68,7 @@ export interface IWbiDocument {
  {
   Title: string;
   Description: string;
+  Version:string;
   Url: string;
   OwnerId: number;
   OrganizationId: number;
