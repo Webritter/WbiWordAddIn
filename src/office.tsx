@@ -67,7 +67,7 @@ export class OfficeContainer extends React.Component<IProps, IState> {
 
 
   render() {
-    const { officeInitialized, updateUrl  } = this.props;
+    const { officeInitialized, updateUrl, children  } = this.props;
     const {initialized, url, reason } = this.props.office;
 
     const onDebugClick = function() {
@@ -86,8 +86,10 @@ export class OfficeContainer extends React.Component<IProps, IState> {
     if (reason == 'Debug') {
       return (
         <div>
-            <TextField disabled={reason != "Debug"} label="Url" ariaLabel="Url" value={url} onChanged={updateUrl} /> 
+            <TextField label="Url" ariaLabel="Url" value={url} onChanged={updateUrl} /> 
+            {children}
         </div>
+
       )
     }
 
@@ -103,7 +105,11 @@ export class OfficeContainer extends React.Component<IProps, IState> {
         </div>
         );
     }
-    return (<div></div>);
+    return (
+      <div>
+        {children}
+      </div>
+    );
   }
 
 

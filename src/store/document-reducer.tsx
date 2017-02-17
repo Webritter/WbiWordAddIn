@@ -2,6 +2,8 @@ import { createAction, Action } from 'redux-actions';
 import * as Immutable from 'seamless-immutable';
 
 import { IWbiOrganization, IWbiLayout, IWbiDocument,IWbiOwner } from '../services/wbi/wbi-types'
+import { insertHeader, clearHeader} from '../services/office/header-footer'
+
 import { IDropdownOption } from 'office-ui-fabric-react/lib/DropDown'
 
 // Action Types - LOAD, CREATE, UPDATE, REMOVE
@@ -59,6 +61,7 @@ export const initialState: IDocumentReducer = {
 };
 
 export default function reducer(state = Immutable.from(initialState), action: Action<any>) {
+
   switch (action.type) {
    
     case UPDATE_ORGANIZATION:
@@ -66,10 +69,12 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         organization: action.payload,
       });
      case UPDATE_LAYOUT:
-     return state.merge({
+      insertHeader(action.payload.Header, (state.wbiData) ? state.wbiData.Id : "", state.title, "","")
+      return state.merge({
         layout: action.payload
       }); 
      case UPDATE_TITLE:
+      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", action.payload, "","")
       return state.merge({
         title: action.payload,
       }); 
@@ -96,7 +101,8 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         wbiData: null
       }); 
       case UPDATE_WBIDATA:
-      // update the model with the data from wbi server     
+      // update the model with the data from wbi server    
+ 
       return state.merge({
         isLoading: false,
         errorMessage: "",

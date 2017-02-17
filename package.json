@@ -3,9 +3,9 @@
   "version": "0.11.1",
   "description": "Futuristic, production-ready development environment for building Component-Driven, Flux Single Page Applications with React, Redux and TypeScript - powered by JSPM (SystemJS with Hot-Reload & Rollup).",
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io/)",
-  "homepage": "http://piotrwitek.github.io/react-redux-typescript-starter-kit/",
-  "repository": "https://github.com/piotrwitek/react-redux-typescript-starter-kit.git",
-  "bugs": "https://github.com/piotrwitek/react-redux-typescript-starter-kit/issues",
+  "homepage": "http://wbidatabackend.azurewebsites.net/",
+  "repository": "",
+  "bugs": "",
   "license": "MIT",
   "main": "server.js",
   "scripts": {
@@ -30,7 +30,8 @@
     "test": "jest --config ./jest.config.json",
     "test:update": "jest -u --config ./jest.config.json",
     "regenerator": "node scripts/regenerator.js",
-    "build:regenerator": "npm run build:app && npm run regenerator"
+    "build:regenerator": "npm run build:app && npm run regenerator",
+    "upload": "npm run build:app && npm run build:vendor && cd ./dist && ftpsync "
   },
   "devDependencies": {
     "@types/classnames": "^0.0.32",

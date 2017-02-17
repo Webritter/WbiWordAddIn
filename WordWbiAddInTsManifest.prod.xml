@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns=
+  "http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:type="TaskPaneApp">
+  <Id>3f0e89b2-b486-425b-b5b1-787e3ce52a7a</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Webritter</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="WBI mit Word (PROD)">
+    <Override Locale="en-US" Value="WBI on Word (PROD)"/> 
+  </DisplayName>
+  <Description DefaultValue="WBI Funktionen direkt im Word verwenden.">
+    <Override Locale="en-US" Value="Do your WBI jobs in Word"/>
+  </Description>
+  <IconUrl DefaultValue="https://contoso.com.sa/ProjectApp/Topgunas-SA.png">
+    <Override Locale="en-US" Value="https://contoso.com/ProjectApp/Topgunen-US.png"/>
+  </IconUrl>
+  <AppDomains>
+    <AppDomain>http://www.projectlogin.com</AppDomain>
+    <AppDomain>http://m.projectlogin.com</AppDomain>
+    <AppDomain>http://www.projectlogin.com.sa</AppDomain>
+    <AppDomain>http://m.projectlogin.com.sa</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name = "Document"/>
+    <Host Name = "Workbook"/>
+    <Host Name = "Presentation"/>
+    <Host Name = "Project"/>
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="http://wbiwordaddin.azurewebsites.net">
+      <Override Locale="en-US" Value="http://wbiwordaddin.azurewebsites.net"/>
+    </SourceLocation>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+</OfficeApp>

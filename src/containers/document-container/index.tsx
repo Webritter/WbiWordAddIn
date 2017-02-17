@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { IWbiOrganization, IWbiLayout, IWbiDocument, IWbiPathDocument, IWbiAddDocument } from '../../services/wbi/wbi-types';
 import { inserText } from '../../services/office/document-info';
 import { requestByUrl, patchDocument, addDocument } from '../../services/wbi/wbi-document';
+import { insertHeader, clearHeader} from '../../services/office/header-footer'
 
 // store
 import { IRootReducer } from '../../store';
@@ -42,8 +43,11 @@ interface IProps {
 interface IState {
 }
 
+
+
 export class DocumentContainer extends React.Component<IProps, IState> {
 
+  
  public onSaveClick = () => { 
     // <-- note syntax here
      const {url} = this.props.office;
@@ -90,11 +94,18 @@ export class DocumentContainer extends React.Component<IProps, IState> {
       }
     }
 
+    
+    onLayoutChanged = ( layout : IWbiLayout) => {
+        const {title, owner, wbiData } = this.props.document;
+        const version:string = "";
+        this.props.updateLayout(layout)
+        insertHeader(layout.Header, (wbiData) ? wbiData.Id : "", title, (owner) ? owner.LastName : "", version)
+    }
 
   render() {
     const {initialized, reason, url} = this.props.office;
 
-    const { updateOrganization, updateLayout,updateUrl, updateTitle, updateDescription, updateWbiData, updateIsLoading, updateError } = this.props;
+    const { updateOrganization,updateUrl, updateTitle, updateDescription, updateWbiData, updateIsLoading, updateError } = this.props;
 
     const { organization, layout, owner, title, description, wbiData, isLoading, layoutOptions } = this.props.document;
     
@@ -176,17 +187,18 @@ export class DocumentContainer extends React.Component<IProps, IState> {
       <article>
         <PageHeader>WBI Document</PageHeader>
         <PageSection className="u-centered">
-           <WbiDocumentInfo initialized={initialized} reason= {reason} info={this.props.document} />
-           <OfficeAddIn />
+           <WbiDocumentInfo initialized={initialized} reason= {reason} info={this.props.document} />      
         </PageSection>
+        <OfficeAddIn>
          <section className="u-letter-box--xlarge">
           <TextField label="Title" ariaLabel="Title" value={title} onChanged={updateTitle} /> 
           <TextField label="Description" ariaLabel="Description" multiline={true} value={description} onChanged={updateDescription} /> 
           <WbiOrganizationDropdown disabled ={isLoading || wbiData != null} label="Organisation" selected={organization} organizations={myInfo.Organizations} onChange={updateOrganization}/>
-          <WbiLayoutDropdown label="Layout" selected={layout} options={layoutOptions} layouts={(organization)?organization.Layouts: null} onChange={updateLayout}/>
-          <Button  description="Aktualisieren" buttonType={ ButtonType.primary } onClick={onRefreshClick}>Aktualisieren</Button>
-          <Button  description="Speichern" disabled={!url || !title || !description || !layout || !organization} buttonType={ ButtonType.primary } onClick={this.onSaveClick}>{wbiData ? 'Speichern': 'Hinzufügen'}</Button>
+          <WbiLayoutDropdown label="Layout" selected={layout} options={layoutOptions} layouts={(organization)?organization.Layouts: null} onChange={this.onLayoutChanged}/>
+          <Button description="Aktualisieren" buttonType={ ButtonType.primary } onClick={onRefreshClick}>Aktualisieren</Button>
+          <Button description="Speichern" disabled={!url || !title || !description || !layout || !organization} buttonType={ ButtonType.primary } onClick={this.onSaveClick}>{wbiData ? 'Speichern': 'Hinzufügen'}</Button>
          </section>
+         </OfficeAddIn>
       </article>
     );
   }
