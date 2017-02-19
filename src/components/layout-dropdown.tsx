@@ -7,6 +7,7 @@ import { IWbiLayout } from '../services/wbi/wbi-types'
 interface IProps {
   label: string;
   onChange: (layout: IWbiLayout) => void;
+  disabled: boolean;
   layouts : [IWbiLayout] | null;
   selected : IWbiLayout | null;
   options : [IDropdownOption] | null
@@ -24,7 +25,7 @@ export class WbiLayoutDropdown extends React.Component<IProps, IState> {
   
   render(): JSX.Element {
 
-    const { layouts, onChange, selected } = this.props;
+    const { disabled, layouts, onChange, selected } = this.props;
 
     // check if there is a organization list
     if (layouts == null) {
@@ -54,6 +55,7 @@ export class WbiLayoutDropdown extends React.Component<IProps, IState> {
     return <Dropdown
           label='Layout' selectedKey={(selected)? selected.Id: 0}
           options={layoutOptions}
+          disabled ={disabled}
           onChanged={ selectionChanged }
           /> 
 

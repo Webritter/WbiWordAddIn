@@ -4,10 +4,8 @@ import { Action } from 'redux-actions';
 import { connect } from 'react-redux';
 
 // services
-import { IWbiOrganization, IWbiLayout,IWbiOwner, IWbiDocument, IWbiPathDocument, IWbiAddDocument } from '../../services/wbi/wbi-types';
-import { inserText } from '../../services/office/document-info';
+import { IWbiOrganization, IWbiLayout,IWbiMember, IWbiDocument, IWbiPathDocument, IWbiAddDocument } from '../../services/wbi/wbi-types';
 import { requestByUrl, patchDocument, addDocument } from '../../services/wbi/wbi-document';
-import { insertHeader, clearHeader} from '../../services/office/header-footer'
 
 // store
 import { IRootReducer } from '../../store';
@@ -37,7 +35,7 @@ interface IProps {
   updateTitle :  (payload: string) => Action<string>;
   updateUrl :  (payload: string) => Action<string>;
   updateVersion :  (payload: string) => Action<string>;
-  updateOwner :  (payload: IWbiOwner) => Action<IWbiOwner>;
+  updateOwner :  (payload: IWbiMember|null) => Action<IWbiMember|null>;
   updateDescription :  (payload: string) => Action<string>;
   updateWbiData : (payload: IWbiDocument) => Action<IWbiDocument>;
   updateIsLoading : (payload: boolean) => Action<boolean>;
@@ -100,17 +98,11 @@ export class DocumentContainer extends React.Component<IProps, IState> {
     }
 
     
-    onLayoutChanged = ( layout : IWbiLayout) => {
-        const {title, owner, wbiData } = this.props.document;
-        const version:string = "";
-        this.props.updateLayout(layout)
-        insertHeader(layout.Header, (wbiData) ? wbiData.Id : "", title, (owner) ? owner.LastName : "", version)
-    }
 
   render() {
     const {initialized, reason, url} = this.props.office;
 
-    const { updateOrganization,updateUrl, updateTitle, updateDescription, updateVersion, updateOwner, updateWbiData, updateIsLoading, updateError } = this.props;
+    const { updateOrganization, updateUrl, updateTitle, updateDescription, updateLayout, updateVersion, updateOwner, updateWbiData, updateIsLoading, updateError } = this.props;
 
     const { organization, layout, owner, title, description, version, wbiData, isLoading, layoutOptions } = this.props.document;
     
@@ -195,15 +187,21 @@ export class DocumentContainer extends React.Component<IProps, IState> {
            <WbiDocumentInfo initialized={initialized} reason= {reason} info={this.props.document} />      
         </PageSection>
         <OfficeAddIn>
+          <PageSection className="o-container o-container--small">
          <section className="u-letter-box--xlarge">
-          <TextField label="Title" ariaLabel="Title" value={title} onChanged={updateTitle} /> 
-          <TextField label="Description" ariaLabel="Description" multiline={true} value={description} onChanged={updateDescription} /> 
-          <TextField label="Version" ariaLabel="Version" value={version} onChanged={updateVersion} /> 
+          <TextField disabled={isLoading}  label="Title" ariaLabel="Title" value={title} onChanged={updateTitle} /> 
+          <TextField disabled={isLoading}  label="Description" ariaLabel="Description" multiline={true} value={description} onChanged={updateDescription} /> 
+          <TextField disabled={isLoading} label="Version" ariaLabel="Version" value={version} onChanged={updateVersion} /> 
           <WbiOrganizationDropdown disabled ={isLoading || wbiData != null} label="Organisation" selected={organization} organizations={myInfo.Organizations} onChange={updateOrganization}/>
-          <WbiLayoutDropdown label="Layout" selected={layout} options={layoutOptions} layouts={(organization)?organization.Layouts: null} onChange={this.onLayoutChanged}/>
-          <Button description="Aktualisieren" buttonType={ ButtonType.primary } onClick={onRefreshClick}>Aktualisieren</Button>
-          <Button description="Speichern" disabled={!url || !title || !description || !layout || !organization} buttonType={ ButtonType.primary } onClick={this.onSaveClick}>{wbiData ? 'Speichern': 'Hinzufügen'}</Button>
+          <WbiLayoutDropdown label="Layout" disabled={isLoading} selected={layout} options={layoutOptions} layouts={(organization)?organization.Layouts: null} onChange={updateLayout}/>
+          <WbiOwnerPicker label="Owner" disabled={isLoading || !organization} selected={owner} organizationId={(organization) ? organization.Id : 0} onChange={updateOwner} />         
+          <div>
+            <br/>
+            <Button description="Aktualisieren" buttonType={ ButtonType.primary } onClick={onRefreshClick}>Aktualisieren</Button>
+            <Button description="Speichern" disabled={!url || !title || !description || !layout || !organization} buttonType={ ButtonType.primary } onClick={this.onSaveClick}>{wbiData ? 'Speichern': 'Hinzufügen'}</Button>
+          </div>
          </section>
+         </PageSection>
          </OfficeAddIn>
       </article>
     );

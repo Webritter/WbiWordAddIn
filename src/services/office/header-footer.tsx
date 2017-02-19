@@ -1,4 +1,5 @@
    export function insertHeader(header: string, nr:string, title:string, owner: string, version:string) {
+    if (typeof Word != 'undefined') {
         // Run a batch operation against the Word object model.
         Word.run(function (context) {
 
@@ -39,7 +40,9 @@
                 console.log('Debug info: ' + JSON.stringify(error.debugInfo));
             }
         });
+      }
     }
+
 
     export function clearHeader() {
         // Run a batch operation against the Word object model.

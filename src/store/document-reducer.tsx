@@ -1,7 +1,7 @@
 import { createAction, Action } from 'redux-actions';
 import * as Immutable from 'seamless-immutable';
 
-import { IWbiOrganization, IWbiLayout, IWbiDocument,IWbiOwner } from '../services/wbi/wbi-types'
+import { IWbiOrganization, IWbiLayout, IWbiDocument,IWbiMember } from '../services/wbi/wbi-types'
 import { insertHeader, clearHeader} from '../services/office/header-footer'
 
 import { IDropdownOption } from 'office-ui-fabric-react/lib/DropDown'
@@ -22,7 +22,7 @@ const UPDATE_OFFICE = 'document/UPDATTE_OFFICE';
 // Action Creators
 export const updateOrganization = createAction<IWbiOrganization>(UPDATE_ORGANIZATION);
 export const updateLayout = createAction<IWbiLayout>(UPDATE_LAYOUT);
-export const updateOwner = createAction<IWbiLayout>(UPDATE_OWNER);
+export const updateOwner = createAction<IWbiMember|null>(UPDATE_OWNER);
 export const updateTitle = createAction<string>(UPDATE_TITLE);
 export const updateDescription = createAction<string>(UPDATE_DESCRIPTION);
 export const updateVersion = createAction<string>(UPDATE_VERSION);
@@ -35,7 +35,7 @@ export const updateOffice = createAction<boolean>(UPDATE_OFFICE);
 export interface IDocumentReducer {
   organization: IWbiOrganization | null;
   layout: IWbiLayout | null;
-  owner: IWbiOwner | null;
+  owner: IWbiMember | null;
   number : string;
   url : string;
   title : string;
@@ -73,12 +73,17 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         organization: action.payload,
       });
      case UPDATE_LAYOUT:
-      insertHeader(action.payload.Header, (state.wbiData) ? state.wbiData.Id : "", state.title, "",state.version)
+      insertHeader(action.payload.Header, (state.wbiData) ? state.wbiData.Id : "", state.title, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "",state.version)
       return state.merge({
         layout: action.payload
       }); 
+    case UPDATE_OWNER:
+      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id : "", state.title, (action.payload) ? (action.payload.Info)? action.payload.Info : action.payload.LastName + " " +action.payload.FirstName : "",state.version)
+      return state.merge({
+        owner: action.payload
+      }); 
      case UPDATE_TITLE:
-      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", action.payload, "",state.version)
+      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", action.payload, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "",state.version)
       return state.merge({
         title: action.payload,
       }); 
@@ -87,7 +92,7 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         description: action.payload,
       }); 
       case UPDATE_VERSION:
-       insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", state.title, "", action.payload)
+       insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", state.title, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "", action.payload)
       return state.merge({
         version: action.payload,
       }); 
@@ -114,7 +119,7 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
        const header:string = (action.payload.Layout) ? action.payload.Layout.Header : "";
        const nr:string = action.payload.Id;
        const title:string = action.payload.Title;
-       const owner:string = "";
+       const owner:string = (action.payload.Owner) ? (action.payload.Owner.Info)? action.payload.Owner.Info : action.payload.Owner.LastName + " " + action.payload.Owner.FirstName : "";
        const version:string = action.payload.Version;
        insertHeader(header, nr, title, owner,version)
       

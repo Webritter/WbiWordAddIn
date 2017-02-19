@@ -2,13 +2,17 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { PageSection } from '../../components/page-section';
 import { PageHero } from '../../components/page-hero';
+import { WbiOwnerPicker } from '../../components/owner-picker';
+import {IWbiMember } from '../../services/wbi/wbi-types';
+function onOwnerSelected(member: IWbiMember ) {
 
+}
 export function HomeContainer() {
   return (
     <article>
       <PageHero title="Wilkommen zu WBI" subtitle="Wissen besser integrieren" />
       <PageSection className="o-container o-container--small">
-        <p>
+         <p>
           Below you can find a few examples created using concepts of this starter-kit:
         </p>
         <br />

@@ -76,7 +76,7 @@ export class MainLayout extends React.Component<IProps, IState> {
         </LayoutMain>
 
         <LayoutFooter>
-          2017 &copy; Helmut Ritter<br />
+          2017 &copy; webritter<br />
         </LayoutFooter>
       </div>
     );
