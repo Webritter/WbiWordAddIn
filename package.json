@@ -1,8 +1,8 @@
 {
-  "name": "react-redux-typescript-starter-kit",
+  "name": "wbi-word-add-in",
   "version": "0.11.1",
-  "description": "Futuristic, production-ready development environment for building Component-Driven, Flux Single Page Applications with React, Redux and TypeScript - powered by JSPM (SystemJS with Hot-Reload & Rollup).",
-  "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io/)",
+  "description": "A powerfull Word-Add-In to handle WBI knowledge management directly in MSWord - powered by meusburger.com.",
+  "author": "Helmut Ritter <webritter@gmx.at>",
   "homepage": "http://wbidatabackend.azurewebsites.net/",
   "repository": "",
   "bugs": "",

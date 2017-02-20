@@ -3,7 +3,7 @@
   "remote":"/site/wwwroot",
   "host":"ftp://waws-prod-am2-033.ftp.azurewebsites.windows.net",
   "port":21,
-  "user":"WbiWordAddIn\\AzureWbiDelpoy",
+  "user":"WbiWordAddIn\\AzureWbiDeploy",
   "pass":"jktr89gf",
   "connections":"1",
   "ignore":[
