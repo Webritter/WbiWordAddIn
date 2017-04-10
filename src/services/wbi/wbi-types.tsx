@@ -1,5 +1,5 @@
 
-export const WBI_HOST = 'http://wbidatabackend.azurewebsites.net';
+export const WBI_HOST = 'http://wbidatabackend2.azurewebsites.net';
 //export const WBI_HOST = 'http://localhost:44351';
 export const WBI_AUTH_URL = WBI_HOST + '/token';
 export const WBI_DOCUMENTS_URL = WBI_HOST + '/api/documents';
