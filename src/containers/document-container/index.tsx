@@ -50,25 +50,30 @@ export class DocumentContainer extends React.Component<IProps, IState> {
 
   
  public onSaveClick = () => { 
-    // <-- note syntax here
-     const {url} = this.props.office;
-     const { updateWbiData, updateIsLoading, updateError } = this.props;
-
+    // getting data from props to local variables
+    const {url} = this.props.office;
     const { organization, layout, owner, title, description,version, wbiData, } = this.props.document;
-    
-      if (wbiData) {
-        // update the document on the wbi server
-        var pathDoc:IWbiPathDocument = {
+    // getting functions from props
+    const { updateWbiData, updateIsLoading, updateError } = this.props;
+
+      
+    if (wbiData) {
+      // update the document on the wbi server
+      // prepare parameter for API call
+      var pathDoc:IWbiPathDocument = {
           Title: title,
           Url: url,
           Description: description,
           Version:version,
-        }
-        if (owner) pathDoc.OwnerId = owner.Id;
-        if (layout) pathDoc.LayoutId = layout.Id;
-        if (organization) pathDoc.OrganizationId = organization.Id;
-        updateIsLoading(true);
-        patchDocument(wbiData.Id, pathDoc).then(function(info:IWbiDocument) {
+      }
+      if (owner) pathDoc.OwnerId = owner.Id;
+      if (layout) pathDoc.LayoutId = layout.Id;
+      if (organization) pathDoc.OrganizationId = organization.Id;
+
+      // indicate update is loading
+      updateIsLoading(true);
+      // call wbi document service to update (patch) the documents data
+      patchDocument(wbiData.Id, pathDoc).then(function(info:IWbiDocument) {
           // store the received data from wbi server
           updateWbiData(info);          
         })

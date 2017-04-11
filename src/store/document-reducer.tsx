@@ -115,26 +115,26 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         wbiData: null
       }); 
       case UPDATE_WBIDATA:
-      // update the model with the data from wbi server    
-       const header:string = (action.payload.Layout) ? action.payload.Layout.Header : "";
-       const nr:string = action.payload.Id;
-       const title:string = action.payload.Title;
-       const owner:string = (action.payload.Owner) ? (action.payload.Owner.Info)? action.payload.Owner.Info : action.payload.Owner.LastName + " " + action.payload.Owner.FirstName : "";
-       const version:string = action.payload.Version;
-       insertHeader(header, nr, title, owner,version)
-      
-      return state.merge({
-        isLoading: false,
-        errorMessage: "",
-        wbiData: action.payload,
-        // update the input fields and dropdowns
-        description: action.payload.Description,
-        version: action.payload.Version,
-        title : action.payload.Title,
-        layout: action.payload.Layout,
-        organization : action.payload.Organization,
-        owner: action.payload.Owner
-      }); 
+        // update the model with the data from wbi server    
+        const header:string = (action.payload.Layout) ? action.payload.Layout.Header : "";
+        const nr:string = action.payload.Id;
+        const title:string = action.payload.Title;
+        const owner:string = (action.payload.Owner) ? (action.payload.Owner.Info)? action.payload.Owner.Info : action.payload.Owner.LastName + " " + action.payload.Owner.FirstName : "";
+        const version:string = action.payload.Version;
+        insertHeader(header, nr, title, owner,version)
+        
+        return state.merge({
+          isLoading: false,
+          errorMessage: "",
+          wbiData: action.payload,
+          // update the input fields and dropdowns
+          description: action.payload.Description,
+          version: action.payload.Version,
+          title : action.payload.Title,
+          layout: action.payload.Layout,
+          organization : action.payload.Organization,
+          owner: action.payload.Owner
+        }); 
     default: return state;
   }
 }
