@@ -4,7 +4,7 @@ import { Action } from 'redux-actions';
 import { connect } from 'react-redux';
 
 // services
-import { IWbiOrganization, IWbiLayout,IWbiMember, IWbiDocument, IWbiPathDocument, IWbiAddDocument } from '../../services/wbi/wbi-types';
+import { IWbiOrganization, IWbiLayout,IWbiMember, IWbiDocument, IWbiPatchDocument, IWbiAddDocument } from '../../services/wbi/wbi-types';
 import { requestByUrl, patchDocument, addDocument } from '../../services/wbi/wbi-document';
 
 // store
@@ -60,7 +60,7 @@ export class DocumentContainer extends React.Component<IProps, IState> {
     if (wbiData) {
       // update the document on the wbi server
       // prepare parameter for API call
-      var pathDoc:IWbiPathDocument = {
+      var pathDoc:IWbiPatchDocument = {
           Title: title,
           Url: url,
           Description: description,

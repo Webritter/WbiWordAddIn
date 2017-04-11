@@ -47,7 +47,7 @@ export interface IWbiDocument {
   
  }
 
- export interface IWbiPathDocument {
+ export interface IWbiPatchDocument {
   Title: string;
   Description: string;
   Version: string;

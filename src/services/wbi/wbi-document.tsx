@@ -1,7 +1,7 @@
 
 import { validateStatusCode, logRejection } from '../../utils/index';
 import { AppStore } from '../local-storage/app-store';
-import { IWbiDocument, WBI_DOCUMENTS_URL, IWbiPathDocument, IWbiAddDocument } from './wbi-types';
+import { IWbiDocument, WBI_DOCUMENTS_URL, IWbiPatchDocument, IWbiAddDocument } from './wbi-types';
 
 // Get the latest foreign exchange reference rates in JSON format.
 
@@ -55,7 +55,7 @@ export async function addDocument(doc: IWbiAddDocument): Promise<IWbiDocument> {
   }
 }
 
-export async function patchDocument(id:string, doc: IWbiPathDocument): Promise<IWbiDocument> {
+export async function patchDocument(id:string, doc: IWbiPatchDocument): Promise<IWbiDocument> {
   try {
     var local_store = new AppStore();
     let requestUrl = WBI_DOCUMENTS_URL+'?id=' + id;
