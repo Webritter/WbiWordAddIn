@@ -121,7 +121,7 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         const title:string = action.payload.Title;
         const owner:string = (action.payload.Owner) ? (action.payload.Owner.Info)? action.payload.Owner.Info : action.payload.Owner.LastName + " " + action.payload.Owner.FirstName : "";
         const version:string = action.payload.Version;
-        insertHeader(header, nr, title, owner,version)
+        insertHeader(header, nr, title, owner, version)
         
         return state.merge({
           isLoading: false,

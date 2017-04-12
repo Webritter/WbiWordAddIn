@@ -52,7 +52,7 @@ export class DocumentContainer extends React.Component<IProps, IState> {
  public onSaveClick = () => { 
     // getting data from props to local variables
     const {url} = this.props.office;
-    const { organization, layout, owner, title, description,version, wbiData, } = this.props.document;
+    const { organization, layout, owner, title, description, version, wbiData, } = this.props.document;
     // getting functions from props
     const { updateWbiData, updateIsLoading, updateError } = this.props;
 
@@ -60,20 +60,20 @@ export class DocumentContainer extends React.Component<IProps, IState> {
     if (wbiData) {
       // update the document on the wbi server
       // prepare parameter for API call
-      var pathDoc:IWbiPatchDocument = {
+      var patchDoc:IWbiPatchDocument = {
           Title: title,
           Url: url,
           Description: description,
           Version:version,
       }
-      if (owner) pathDoc.OwnerId = owner.Id;
-      if (layout) pathDoc.LayoutId = layout.Id;
-      if (organization) pathDoc.OrganizationId = organization.Id;
+      if (owner) patchDoc.OwnerId = owner.Id;
+      if (layout) patchDoc.LayoutId = layout.Id;
+      if (organization) patchDoc.OrganizationId = organization.Id;
 
       // indicate update is loading
       updateIsLoading(true);
       // call wbi document service to update (patch) the documents data
-      patchDocument(wbiData.Id, pathDoc).then(function(info:IWbiDocument) {
+      patchDocument(wbiData.Id, patchDoc).then(function(info:IWbiDocument) {
           // store the received data from wbi server
           updateWbiData(info);          
         })
@@ -105,17 +105,13 @@ export class DocumentContainer extends React.Component<IProps, IState> {
     
 
   render() {
+    // getting data from props to local variables
     const {initialized, reason, url} = this.props.office;
-
     const { updateOrganization, updateUrl, updateTitle, updateDescription, updateLayout, updateVersion, updateOwner, updateWbiData, updateIsLoading, updateError } = this.props;
-
     const { organization, layout, owner, title, description, version, wbiData, isLoading, layoutOptions } = this.props.document;
     
-  
-
     const requestWbiInfos = function(url:string) {
-      requestByUrl(url)
-      .then(function(info:IWbiDocument) {
+      requestByUrl(url).then(function(info:IWbiDocument) {
         // store the received data from wbi server
         updateWbiData(info);
         })
@@ -182,7 +178,8 @@ export class DocumentContainer extends React.Component<IProps, IState> {
     }
 
     if (url && !wbiData) {
-          requestWbiInfos(url);
+       // try to find wbiData for the current url via API
+       requestWbiInfos(url);
     }
 
     return (
