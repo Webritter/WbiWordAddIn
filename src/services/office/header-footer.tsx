@@ -1,4 +1,4 @@
-   export function insertHeader(header: string, nr:string, title:string, owner: string, version:string) {
+   export function insertHeaderFooter(header: string, footer: string, nr:string, title:string, owner: string, version:string) {
     if (typeof Word != 'undefined') {
         // Run a batch operation against the Word object model.
         Word.run(function (context) {
@@ -16,6 +16,7 @@
                 // Create a proxy object the primary header of the first section. 
                 // Note that the header is a body object.
                 var myHeader = mySections.items[0].getHeader("primary");
+                var myFooter = mySections.items[0].getFooter("primary");
 
                 header = header.replace("{nr}", nr);
                 header = header.replace("{title}", title);
@@ -26,6 +27,16 @@
                 myHeader.insertHtml(header, Word.InsertLocation.replace);
                 // Queue a command to wrap the header in a content control.
                 myHeader.insertContentControl();
+
+                footer = footer.replace("{nr}", nr);
+                footer = footer.replace("{title}", title);
+                footer = footer.replace("{owner}", owner);
+                footer = footer.replace("{version}", version);
+                
+                // Queue a command to insert text at the end of the header.
+                myFooter.insertHtml(footer, Word.InsertLocation.replace);
+                // Queue a command to wrap the header in a content control.
+                myFooter.insertContentControl();
 
                 // Synchronize the document state by executing the queued-up commands, 
                 // and return a promise to indicate task completion.
@@ -82,3 +93,5 @@
             }
         });
     }
+
+

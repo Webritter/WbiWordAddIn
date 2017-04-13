@@ -13,7 +13,7 @@ export function HomeContainer() {
         
 
          <p>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis
+          WBI verbindet Mensch, Organisation und Technik miteinander.
         </p>
         
       </PageSection>

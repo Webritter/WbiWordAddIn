@@ -41,27 +41,6 @@ interface IState {
 
 export class WbiAuthContainer extends React.Component<IProps, IState> {
 
-/*
-  getMyInfo() {
-    if (this.props.wbiAuth.token) {
-      // set isLoading....
-      this.props.myInfoRequest(this.props.wbiAuth.token.userName);
-      // try to request infos from wbi server
-      requestMyInfo()
-        .then((data:IWbiMyInfoResponse) => {
-          this.props.myInfoSuccess(data);
-        })
-        .catch((error) =>{
-          // indicate request error
-          this.props.myInfoError(error.message)
-        });
-    }
-  }
-
-  componentDidMount() {
-    this.getMyInfo();
-  }
-*/
   render() {
     const { username, password, isLoading, errorMessage, token } = this.props.wbiAuth;
     const { updateUsername, updatePassword, login, logout, loginSuccess, loginError, 

@@ -2,7 +2,7 @@ import { createAction, Action } from 'redux-actions';
 import * as Immutable from 'seamless-immutable';
 
 import { IWbiOrganization, IWbiLayout, IWbiDocument,IWbiMember } from '../services/wbi/wbi-types'
-import { insertHeader, clearHeader} from '../services/office/header-footer'
+import { insertHeaderFooter} from '../services/office/header-footer'
 
 import { IDropdownOption } from 'office-ui-fabric-react/lib/DropDown'
 
@@ -73,17 +73,18 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         organization: action.payload,
       });
      case UPDATE_LAYOUT:
-      insertHeader(action.payload.Header, (state.wbiData) ? state.wbiData.Id : "", state.title, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "",state.version)
+      insertHeaderFooter(action.payload.Header, action.payload.Footer, (state.wbiData) ? state.wbiData.Id : "", state.title, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "",state.version)
+      
       return state.merge({
         layout: action.payload
       }); 
     case UPDATE_OWNER:
-      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id : "", state.title, (action.payload) ? (action.payload.Info)? action.payload.Info : action.payload.LastName + " " +action.payload.FirstName : "",state.version)
+      insertHeaderFooter((state.layout) ? state.layout.Header : "", (state.layout) ? state.layout.Footer : "", (state.wbiData) ? state.wbiData.Id : "", state.title, (action.payload) ? (action.payload.Info)? action.payload.Info : action.payload.LastName + " " +action.payload.FirstName : "",state.version)
       return state.merge({
         owner: action.payload
       }); 
      case UPDATE_TITLE:
-      insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", action.payload, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "",state.version)
+      insertHeaderFooter((state.layout) ? state.layout.Header : "", (state.layout) ? state.layout.Footer : "", (state.wbiData) ? state.wbiData.Id: "", action.payload, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "",state.version)
       return state.merge({
         title: action.payload,
       }); 
@@ -92,7 +93,7 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
         description: action.payload,
       }); 
       case UPDATE_VERSION:
-       insertHeader((state.layout) ? state.layout.Header : "", (state.wbiData) ? state.wbiData.Id: "", state.title, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "", action.payload)
+       insertHeaderFooter((state.layout) ? state.layout.Header : "", (state.layout) ? state.layout.Footer : "", (state.wbiData) ? state.wbiData.Id: "", state.title, (state.owner) ? (state.owner.Info) ?state.owner.Info : state.owner.LastName + " " + state.owner.FirstName : "", action.payload)
       return state.merge({
         version: action.payload,
       }); 
@@ -117,11 +118,12 @@ export default function reducer(state = Immutable.from(initialState), action: Ac
       case UPDATE_WBIDATA:
         // update the model with the data from wbi server    
         const header:string = (action.payload.Layout) ? action.payload.Layout.Header : "";
+        const footer:string = (action.payload.Layout) ? action.payload.Layout.Footer : "";
         const nr:string = action.payload.Id;
         const title:string = action.payload.Title;
         const owner:string = (action.payload.Owner) ? (action.payload.Owner.Info)? action.payload.Owner.Info : action.payload.Owner.LastName + " " + action.payload.Owner.FirstName : "";
         const version:string = action.payload.Version;
-        insertHeader(header, nr, title, owner, version)
+        insertHeaderFooter(header,footer, nr, title, owner, version)
         
         return state.merge({
           isLoading: false,
